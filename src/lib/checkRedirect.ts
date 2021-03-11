@@ -45,18 +45,20 @@ const checkRedirect = async (config: Config, getUserId: GetUserId) => {
 
   const userId = Cookies.get('userId')
 
-  if (!userId && !hasCodeExisted()) {
-    // 需要重定向
+  const unAuth = !userId || userId === 'undefined' || userId === 'null'
+
+  // 判断是否需要重定向
+  if (unAuth && !hasCodeExisted()) {
     window.location.replace(getOAuthUrl(config));
-  } else {
-    // 重定向回来后获取 userId
-    if (!userId) {
-      const code = qs.parse(window.location.search.slice(1)).code as string
+  }
 
-      const newUserId = await getUserId(code)
+  // 判断是否需要重新获取 userId
+  if (unAuth) {
+    const code = qs.parse(window.location.search.slice(1)).code as string
 
-      Cookies.set('userId', newUserId)
-    }
+    const newUserId = await getUserId(code)
+
+    Cookies.set('userId', newUserId)
   }
 };
 
