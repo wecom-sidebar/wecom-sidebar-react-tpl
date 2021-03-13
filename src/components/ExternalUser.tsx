@@ -12,9 +12,11 @@ const ExternalUser: React.FC = () => {
   const [externalUser, setExternalUser] = useState<ExternalUserResponse['external_contact'] | void>()
 
   const getExternalUserInfo = async () => {
-    const externalUserId = await jsSdk.getCurExternalContact()
+    const res = await jsSdk.invoke<{userId?: string}>('getCurExternalContact')
 
-    const userInfo = await fetchExternalUser(externalUserId).catch(e => console.error(e))
+    if (!res.userId) return
+
+    const userInfo = await fetchExternalUser(res.userId).catch(e => console.error(e))
 
     setExternalUser(userInfo)
 
@@ -22,7 +24,8 @@ const ExternalUser: React.FC = () => {
   }
 
   useEffect(() => {
-    getExternalUserInfo().then()
+    getExternalUserInfo()
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) {
@@ -33,6 +36,13 @@ const ExternalUser: React.FC = () => {
     return null
   }
 
+  const openUserProfile = () => {
+    return jsSdk.invoke('openUserProfile', {
+      userid: externalUser.external_userid,
+      type: externalUser.type
+    })
+  }
+
   return (
     <div>
       <h2>外部联系人</h2>
@@ -40,7 +50,9 @@ const ExternalUser: React.FC = () => {
       <p>ID: {externalUser.external_userid}</p>
       <p>姓名: {externalUser.name}@{externalUser.corp_name}</p>
       <p>姓别: {genderMap[externalUser.gender]}</p>
-      <button onClick={() => jsSdk.openUserProfile(externalUser.external_userid, externalUser.type)}>查看详情</button>
+      <button onClick={openUserProfile}>
+        查看详情
+      </button>
     </div>
   )
 }

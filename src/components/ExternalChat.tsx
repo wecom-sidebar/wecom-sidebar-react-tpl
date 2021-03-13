@@ -4,19 +4,18 @@ import jsSdk from '../lib'
 import {fetchExternalChat} from '../api'
 import {ExternalChatResponse} from '../api/types'
 
-interface IProps {
-}
-
-const ExternalChat: React.FC<IProps> = () => {
+const ExternalChat: React.FC = () => {
   const [loading, setLoading] = useState<boolean>()
   const [externalChat, setExternalChat] = useState<ExternalChatResponse['group_chat'] | void>()
 
   const getExternalChatInfo = async () => {
-    const externalChatId = await jsSdk.getCurExternalChat()
+    const res = await jsSdk.invoke<{chatId?: string}>('getCurExternalChat')
 
-    const userInfo = await fetchExternalChat(externalChatId || '').catch(e => console.error(e))
+    if (!res.chatId) return
 
-    setExternalChat(userInfo)
+    const chatInfo = await fetchExternalChat(res.chatId || '').catch(e => console.error(e))
+
+    setExternalChat(chatInfo)
 
     setLoading(false)
   }
@@ -33,6 +32,13 @@ const ExternalChat: React.FC<IProps> = () => {
     return null
   }
 
+  const openUserProfile = (userId: string, type: 1 | 2) => {
+    return jsSdk.invoke('openUserProfile', {
+      userid: userId,
+      type,
+    })
+  }
+
   return (
     <div>
       <h2>外部联系群</h2>
@@ -43,7 +49,9 @@ const ExternalChat: React.FC<IProps> = () => {
       <ul>
         {externalChat.member_list.map(m => (
           <li key={m.userid}>
-            <a onClick={() => jsSdk.openUserProfile(m.userid, m.type)}>{m.userid}</a>
+            <a onClick={() => openUserProfile(m.userid, m.type)}>
+              {m.userid}
+            </a>
           </li>
         ))}
       </ul>

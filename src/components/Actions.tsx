@@ -5,10 +5,15 @@ import {useCallback, useState} from 'react'
 const Actions: React.FC = () => {
   const [msg, setMsg] = useState<string>('')
 
-  const sendMsg = useCallback(() => {
+  const sendMsg = useCallback(async () => {
     if (!msg) alert('消息不能为空')
 
-    jsSdk.sendChatMessage('text', { content: msg }).catch(e => console.error(e))
+    await jsSdk.invoke('sendChatMessage', {
+      msgtype: 'text',
+      text: {
+        content: msg
+      }
+    }).catch(e => console.error(e))
   }, [msg])
 
   return (
