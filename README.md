@@ -8,8 +8,10 @@
 // src/_config.ts
 
 const config = {
-  corpId: '你的企业ID', // 在 https://work.weixin.qq.com/wework_admin/frame#profile 这里可以找到
-  agentId: '自建应用的AgentId' // 在 https://work.weixin.qq.com/wework_admin/frame#apps 里的自建应用里可以找到
+  // 在 https://work.weixin.qq.com/wework_admin/frame#profile 这里可以找到
+  corpId: '你的企业ID',
+  // 在 https://work.weixin.qq.com/wework_admin/frame#apps 里的自建应用里可以找到
+  agentId: '自建应用的AgentId'
 }
 
 export default config
