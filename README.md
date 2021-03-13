@@ -5,7 +5,7 @@
 启动项目需要用到 `agentId` 和 `corpId`，需要创建 `src/_config.ts`（目前已隐藏），示例
 
 ```ts
-// ./src/_config.ts
+// src/_config.ts
 
 const config = {
   corpId: '你的企业ID', // 在 https://work.weixin.qq.com/wework_admin/frame#profile 这里可以找到
