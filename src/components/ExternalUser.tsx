@@ -19,8 +19,6 @@ const ExternalUser: React.FC = () => {
     const userInfo = await fetchExternalUser(res.userId).catch(e => console.error(e))
 
     setExternalUser(userInfo)
-
-    setLoading(false)
   }
 
   useEffect(() => {

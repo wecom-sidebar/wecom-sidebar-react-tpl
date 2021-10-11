@@ -16,12 +16,11 @@ const ExternalChat: React.FC = () => {
     const chatInfo = await fetchExternalChat(res.chatId || '').catch(e => console.error(e))
 
     setExternalChat(chatInfo)
-
-    setLoading(false)
   }
 
   useEffect(() => {
-    getExternalChatInfo().then()
+    getExternalChatInfo()
+      .finally(() => setLoading(false))
   }, [])
 
   if (loading) {

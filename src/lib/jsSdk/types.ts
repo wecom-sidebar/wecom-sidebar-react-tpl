@@ -1,6 +1,6 @@
-import wxSDK from './index';
+import JsSdk from './index';
 
-export type WxSDK = typeof wxSDK;
+export type JsSDK = typeof JsSdk;
 
 /**
  * 支持多种消息格式，包括文本(“text”)，图片(“image”)，视频(“video”)，文件(“file”)，H5(“news”）和小程序(“miniprogram”)。

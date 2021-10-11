@@ -1,5 +1,7 @@
 export const invokeResMock: Record<string, any> = {
-  'getCurExternalContact': 'YanHaixiang',
+  'getCurExternalContact': {
+    userId: 'wmuUG7CQAAOrCCMkA8cqcCm1wJrJAD6A'
+  },
 }
 
 export const wxResMock: Record<string, any> = {

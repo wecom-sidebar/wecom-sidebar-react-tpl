@@ -1,4 +1,4 @@
-import { WxSDK } from './types';
+import { JsSDK } from './types';
 
 const fakeValue: Record<string, any> = {
   number: 0,
@@ -6,26 +6,35 @@ const fakeValue: Record<string, any> = {
   object: {},
 };
 
-const createMockFn = (apiName: string, mockRes: any) => {
+const createMockFn = (apiName: keyof JsSDK, mockMap: any) => {
   return async (...args: any) => {
-    console.log(`JSSDK调用：${apiName}`)
-    if (typeof mockRes === 'function') {
-      return mockRes(...args);
+    const isInvoke = apiName === 'invoke';
+
+    // 获取对应的 mock 返回
+    const mockRes = isInvoke ? mockMap[args[0]] : mockMap[apiName];
+    // 生成 mock 返回
+    const result = typeof mockRes === 'function' ? mockRes(...args) : mockRes
+
+    // 日志
+    if (apiName === 'invoke') {
+      console.log(`wx.invoke 调用：${args[0]}，返回值：${result}`)
     } else {
-      return mockRes;
+      console.log(`JSSDK调用：${apiName}，返回值：${result}`)
     }
+
+    return result;
   }
 }
 
 /**
  * Mock企业微信 SDK，可以在浏览器下不调用 Sdk
  */
-export const mockJsSdk = (originalJsSdk: WxSDK, wxResMock: Partial<WxSDK>, invokeMockRes: any) => {
-  // @ts-ignore
-  const newJsSdk: WxSDK = {};
+export const mockJsSdk = (originalJsSdk: JsSDK, wxResMock: Partial<JsSDK>, invokeMockRes: any) => {
+  // @ts-ignore 这里要生成 JsSDK 所以要 ignore ts 的报错
+  const newJsSdk: JsSDK = {};
 
   Object.entries(originalJsSdk).forEach(entry => {
-    const [key, originalValue] = entry as [keyof WxSDK, any];
+    const [key, originalValue] = entry as [keyof JsSDK, any];
 
     const originalValueType = typeof originalValue;
     const mockRes = wxResMock[key];
@@ -33,13 +42,14 @@ export const mockJsSdk = (originalJsSdk: WxSDK, wxResMock: Partial<WxSDK>, invok
     // 特殊处理 invoke
     if (key === 'invoke') {
       newJsSdk.invoke = createMockFn(key, invokeMockRes)
+      return;
     }
 
     if (originalValueType === 'function') {
       // mock 函数
-      newJsSdk[key] = createMockFn(key, wxResMock[key]);
+      newJsSdk[key] = createMockFn(key, wxResMock);
     } else {
-      // @ts-ignore 使用 mock 值
+      // 使用 mock 值
       newJsSdk[key] = mockRes || fakeValue[originalValueType] || null;
     }
   });
