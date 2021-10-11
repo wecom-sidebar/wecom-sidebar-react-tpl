@@ -3,7 +3,9 @@ import {JsSDK} from "./lib/jsSdk/types"
 
 declare global {
   interface Window {
-    // Mock 企业微信的 SDK
-    fakeJsSdk?: Partial<JsSDK>;
+    // wx.invoke 里的 Mock 关系表，apiName -> result
+    invokeResMock?: Partial<JsSDK>;
+    // 企业微信的 JsSdk 的 Mock 关系表，fnName -> result
+    wxResMock?: Partial<JsSDK>;
   }
 }
