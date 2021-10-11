@@ -12,9 +12,8 @@ const api = axios.create({
 
 // 根据 userId 获取 user 信息
 export const fetchUser = async (userId: string) => {
-  const response = await api.get<UserResponse>('/api', {
+  const response = await api.get<UserResponse>('/api/qywx/user/get', {
     params: {
-      url: '/user/get',
       userid: userId,
     }
   });
@@ -24,9 +23,8 @@ export const fetchUser = async (userId: string) => {
 
 // 根据 externalUserId 获取 externalUser 信息
 export const fetchExternalUser = async (externalUserId: string, cursor?: string) => {
-  const response = await api.get<ExternalUserResponse>('/api', {
+  const response = await api.get<ExternalUserResponse>('/api/qywx/externalcontact/get', {
     params: {
-      url: '/externalcontact/get',
       external_userid: externalUserId,
       cursor
     }
@@ -37,9 +35,8 @@ export const fetchExternalUser = async (externalUserId: string, cursor?: string)
 
 // 根据 externalChatId 获取 chat 信息
 export const fetchExternalChat = async (externalChatId: string) => {
-  const response = await api.get<ExternalChatResponse>('/api', {
+  const response = await api.get<ExternalChatResponse>('/api/qywx/externalcontact/groupchat/ge', {
     params: {
-      url: '/externalcontact/groupchat/get',
       chat_id: externalChatId
     }
   })
@@ -49,9 +46,8 @@ export const fetchExternalChat = async (externalChatId: string) => {
 
 // 根据 code 换取 userId，作为用户身份验证
 export const fetchAuth = async (code: string) => {
-  const response = await api.get<AuthResponse>('/api', {
+  const response = await api.get<AuthResponse>('/api/qywx/user/getuserinfo', {
     params: {
-      url: '/user/getuserinfo',
       code
     }
   })
@@ -61,9 +57,8 @@ export const fetchAuth = async (code: string) => {
 
 // 获取应用的jsapi_ticket
 export const fetchAppTicket = async () => {
-  const response = await api.get<TicketResponse>('/api', {
+  const response = await api.get<TicketResponse>('/api/qywx/ticket/get', {
     params: {
-      url: '/ticket/get',
       type: 'agent_config'
     }
   })
@@ -73,11 +68,7 @@ export const fetchAppTicket = async () => {
 
 // 获取企业的jsapi_ticket
 export const fetchCorpTicket = async () => {
-  const response = await api.get<TicketResponse>('/api', {
-    params: {
-      url: '/get_jsapi_ticket',
-    }
-  })
+  const response = await api.get<TicketResponse>('/api/qywx/get_jsapi_ticket')
 
   return response.data
 }
