@@ -1,30 +1,23 @@
-import apis from './jsSdk/apis';
-import {TicketRes} from "../api/types"
-import jsSdk from "./index"
+import apis from '../jsSdk/apis';
+import jsSdk from "../index"
 
 export interface Config {
   corpId: string;
   agentId: string;
 }
 
-export type GetUserId = (code: string) => Promise<string>
 export type GetSignatures = () => Promise<TicketRes>
-
-export interface Options {
-  config: Config
-  getSignatures: GetSignatures,
-  getUserId: GetUserId
-}
 
 /**
  * 初始化企业微信 SDK 库
- * @param options 自建应用的基本信息
+ * config: 基础信息配置
+ * getSignatures: 获取签名函数
  */
-const initSdk = async (options: Options) => {
-  const { corpId, agentId } = options.config;
+const initSdk = async (config: Config, getSignatures: GetSignatures) => {
+  const { corpId, agentId } = config;
 
   // 获取 ticket
-  const signaturesRes = await options.getSignatures();
+  const signaturesRes = await getSignatures();
 
   await jsSdk.agentConfig({
     corpid: corpId,

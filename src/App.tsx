@@ -2,7 +2,6 @@ import React, {FC, useEffect, useState} from 'react'
 import {fetchUser} from './api'
 import Cookies from 'js-cookie'
 import ExternalUser from './components/ExternalUser'
-import {UserResponse} from './api/types'
 import ExternalChat from './components/ExternalChat'
 import Actions from './components/Actions'
 

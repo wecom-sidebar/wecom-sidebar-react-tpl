@@ -1,9 +1,9 @@
-export interface Response {
+interface Response {
   errcode: number; // 错误码
   errmsg: string; // 错误信息
 }
 
-export interface UserResponse extends Response {
+interface UserResponse extends Response {
   userid: string; // 成员UserID
   name: string; // 成员名称
   gender: 0 | 1 | 2; // 性别。0表示未定义，1表示男性，2表示女性
@@ -11,7 +11,7 @@ export interface UserResponse extends Response {
   thumb_avatar: string; // 头像缩略图url
 }
 
-export interface ExternalUserResponse extends Response {
+interface ExternalUserResponse extends Response {
   external_contact: {
     external_userid: string // 外部联系人 Id
     name: string // 名字
@@ -23,12 +23,12 @@ export interface ExternalUserResponse extends Response {
   }
 }
 
-export interface AuthResponse extends Response {
+interface AuthResponse extends Response {
   UserId: string // 自己 userId
   DeviceId: string
 }
 
-export interface TicketRes {
+interface TicketRes {
   meta: {
     nonceStr: string,
     timestamp: number,
@@ -46,14 +46,14 @@ export interface TicketRes {
   },
 }
 
-export interface Member {
+interface Member {
   userid: string // 成员 userId
   type: 1 | 2 // 外部联系人的类型，1表示该外部联系人是微信用户，2表示该外部联系人是企业微信用户
   join_time: number // 加群时间
   join_scene: 1 | 2 | 3 // 怎么加群的
 }
 
-export interface ExternalChatResponse extends Response {
+interface ExternalChatResponse extends Response {
   group_chat: {
     chat_id: string // 群 Id
     name: string // 群名

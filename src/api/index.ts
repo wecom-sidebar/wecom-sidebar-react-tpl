@@ -1,11 +1,4 @@
 import axios from 'axios'
-import {
-  AuthResponse,
-  ExternalChatResponse,
-  ExternalUserResponse,
-  TicketRes,
-  UserResponse
-} from './types'
 
 // 后端地址
 const baseURL = 'https://backend.com'

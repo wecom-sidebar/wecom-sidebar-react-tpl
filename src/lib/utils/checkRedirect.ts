@@ -1,21 +1,15 @@
 import Cookies from 'js-cookie'
 import qs from 'qs'
-import {isMock} from "./env"
 import {Config} from "./initSdk"
+import {isMock} from "../mock";
 
 type GetUserId = (code: string) => Promise<string>
-
-/**
- * 判断查询参数是否存在 code
- * @returns {boolean}
- */
-const hasCodeExisted = () => window.location.search.includes('code');
 
 /**
  * 获取重定位的 OAuth 路径
  * @returns {string}
  */
-const getOAuthUrl = (config: Config) => {
+const generateOAuthUrl = (config: Config) => {
   const [redirectUri] = window.location.href.split('#');
 
   const searchObj = {
@@ -47,9 +41,11 @@ const checkRedirect = async (config: Config, getUserId: GetUserId) => {
 
   const unAuth = !userId || userId === 'undefined' || userId === 'null'
 
+  const codeExist = window.location.search.includes('code');
+
   // 判断是否需要重定向
-  if (unAuth && !hasCodeExisted()) {
-    window.location.replace(getOAuthUrl(config));
+  if (unAuth && !codeExist) {
+    window.location.replace(generateOAuthUrl(config));
   }
 
   // 判断是否需要重新获取 userId

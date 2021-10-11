@@ -2,7 +2,6 @@ import * as React from 'react'
 import {useEffect, useState} from 'react'
 import jsSdk from '../lib'
 import {fetchExternalUser} from '../api'
-import {ExternalUserResponse} from '../api/types'
 
 // 性别Map
 const genderMap = ['未定义', '男', '女']
