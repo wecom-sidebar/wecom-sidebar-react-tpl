@@ -17,9 +17,9 @@ const createMockFn = (apiName: keyof JsSDK, mockMap: any) => {
 
     // 日志
     if (apiName === 'invoke') {
-      console.log(`wx.invoke 调用：${args[0]}，返回值：${result}`)
+      console.log('wx.invoke 调用', args[0], '返回值', result);
     } else {
-      console.log(`JSSDK调用：${apiName}，返回值：${result}`)
+      console.log('JSSDK调用', apiName, '返回值', result);
     }
 
     return result;
