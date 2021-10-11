@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie'
 import qs from 'qs'
 import {Config} from "./initSdk"
-import {isMock} from "../mock";
+import {isMock} from "../jsSdk/utils";
 
 type GetUserId = (code: string) => Promise<string>
 

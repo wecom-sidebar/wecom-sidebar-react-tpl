@@ -1,11 +1,25 @@
 import {JsSDK} from "./index";
 
+// 假值
 const fakeValue: Record<string, any> = {
   number: 0,
   string: '',
   object: {},
 };
 
+// 根据外部判断是否为 mock 环境
+const isWindowMock = window.isMock === true;
+// 根据宿主环境判断是否要 mock
+const isHostMock = navigator.userAgent.toLowerCase().includes('chrome')
+  && !navigator.userAgent.toLowerCase().includes('wxwork')
+// 是否为 mock 环境
+export const isMock = isWindowMock || isHostMock;
+
+/**
+ * 生成 mock 函数
+ * @param apiName api 调用名
+ * @param mockMap mock 的映射关系表
+ */
 const createMockFn = (apiName: keyof JsSDK, mockMap: any) => {
   return async (...args: any) => {
     const isInvoke = apiName === 'invoke';

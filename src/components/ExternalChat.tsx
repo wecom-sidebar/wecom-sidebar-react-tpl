@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {useEffect, useState} from 'react'
-import jsSdk from '../lib'
 import {fetchExternalChat} from '../api'
+import {jsSdk} from "../index";
 
 const ExternalChat: React.FC = () => {
   const [loading, setLoading] = useState<boolean>()

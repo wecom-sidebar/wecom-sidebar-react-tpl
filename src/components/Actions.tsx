@@ -1,6 +1,6 @@
 import * as React from 'react'
-import jsSdk from '../lib'
 import {useCallback, useState} from 'react'
+import {jsSdk} from "../index";
 
 const Actions: React.FC = () => {
   const [msg, setMsg] = useState<string>('')

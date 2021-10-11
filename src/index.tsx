@@ -1,17 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import {fetchAuth, fetchSignatures} from './api'
-import initSdk from './lib/utils/initSdk'
+import {fetchUserId, fetchSignatures} from './api'
 import config from './_config'
-import checkRedirect from "./lib/utils/checkRedirect";
+import {invokeResMock, wxResMock} from "./mock";
+import {checkRedirect, createJsSdk, initSdk} from "./lib";
 
-const getUserId = async (code: string) => {
-  const data = await fetchAuth(code)
+export const jsSdk = createJsSdk(wxResMock, invokeResMock);
 
-  return data.UserId
-}
-
-checkRedirect(config, getUserId)
+checkRedirect(config, fetchUserId)
   .then(() => initSdk(config, fetchSignatures))
   .then(() => ReactDOM.render(<App/>, document.getElementById('root')))

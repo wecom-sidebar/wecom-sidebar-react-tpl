@@ -44,14 +44,14 @@ export const fetchExternalChat = async (externalChatId: string) => {
 }
 
 // 根据 code 换取 userId，作为用户身份验证
-export const fetchAuth = async (code: string) => {
+export const fetchUserId = async (code: string) => {
   const response = await api.get<AuthResponse>('/api/qywx-proxy/user/getuserinfo', {
     params: {
       code
     }
   })
 
-  return response.data
+  return response.data.UserId;
 }
 
 // 获取签名
