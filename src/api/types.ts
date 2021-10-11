@@ -23,14 +23,27 @@ export interface ExternalUserResponse extends Response {
   }
 }
 
-export interface TicketResponse extends Response {
-  ticket: string; // ticket
-  expires_in: number; // 过期时长
-}
-
 export interface AuthResponse extends Response {
   UserId: string // 自己 userId
   DeviceId: string
+}
+
+export interface TicketRes {
+  meta: {
+    nonceStr: string,
+    timestamp: number,
+    url: string,
+  },
+  app: {
+    ticket: string,
+    expires: number,
+    signature: string,
+  },
+  corp: {
+    ticket: string,
+    expires: number,
+    signature: string,
+  },
 }
 
 export interface Member {

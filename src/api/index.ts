@@ -1,5 +1,11 @@
 import axios from 'axios'
-import {AuthResponse, ExternalChatResponse, ExternalUserResponse, TicketResponse, UserResponse} from './types'
+import {
+  AuthResponse,
+  ExternalChatResponse,
+  ExternalUserResponse,
+  TicketRes,
+  UserResponse
+} from './types'
 
 // 后端地址
 const baseURL = 'https://backend.com'
@@ -12,7 +18,7 @@ const api = axios.create({
 
 // 根据 userId 获取 user 信息
 export const fetchUser = async (userId: string) => {
-  const response = await api.get<UserResponse>('/api/qywx/user/get', {
+  const response = await api.get<UserResponse>('/api/qywx-proxy/user/get', {
     params: {
       userid: userId,
     }
@@ -23,7 +29,7 @@ export const fetchUser = async (userId: string) => {
 
 // 根据 externalUserId 获取 externalUser 信息
 export const fetchExternalUser = async (externalUserId: string, cursor?: string) => {
-  const response = await api.get<ExternalUserResponse>('/api/qywx/externalcontact/get', {
+  const response = await api.get<ExternalUserResponse>('/api/qywx-proxy/externalcontact/get', {
     params: {
       external_userid: externalUserId,
       cursor
@@ -35,7 +41,7 @@ export const fetchExternalUser = async (externalUserId: string, cursor?: string)
 
 // 根据 externalChatId 获取 chat 信息
 export const fetchExternalChat = async (externalChatId: string) => {
-  const response = await api.get<ExternalChatResponse>('/api/qywx/externalcontact/groupchat/ge', {
+  const response = await api.get<ExternalChatResponse>('/api/qywx-proxy/externalcontact/groupchat/ge', {
     params: {
       chat_id: externalChatId
     }
@@ -46,7 +52,7 @@ export const fetchExternalChat = async (externalChatId: string) => {
 
 // 根据 code 换取 userId，作为用户身份验证
 export const fetchAuth = async (code: string) => {
-  const response = await api.get<AuthResponse>('/api/qywx/user/getuserinfo', {
+  const response = await api.get<AuthResponse>('/api/qywx-proxy/user/getuserinfo', {
     params: {
       code
     }
@@ -55,22 +61,11 @@ export const fetchAuth = async (code: string) => {
   return response.data
 }
 
-// 获取应用的jsapi_ticket
-export const fetchAppTicket = async () => {
-  const response = await api.get<TicketResponse>('/api/qywx/ticket/get', {
-    params: {
-      type: 'agent_config'
-    }
-  })
+// 获取签名
+export const fetchSignatures = async () => {
+  const response = await api.get<TicketRes>('/api/qywx-utils/signatures')
 
-  return response.data
-}
-
-// 获取企业的jsapi_ticket
-export const fetchCorpTicket = async () => {
-  const response = await api.get<TicketResponse>('/api/qywx/get_jsapi_ticket')
-
-  return response.data
+  return response.data;
 }
 
 export default api
