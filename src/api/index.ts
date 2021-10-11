@@ -2,7 +2,7 @@ import axios from 'axios'
 import {AuthResponse, ExternalChatResponse, ExternalUserResponse, TicketResponse, UserResponse} from './types'
 
 // 后端地址
-const baseURL = 'https://service-kuwar5zi-1253834571.gz.apigw.tencentcs.com/release'
+const baseURL = 'https://backend.com'
 
 // 创建 axios 实例
 const api = axios.create({

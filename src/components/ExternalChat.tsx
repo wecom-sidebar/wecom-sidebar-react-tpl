@@ -11,7 +11,7 @@ const ExternalChat: React.FC = () => {
   const getExternalChatInfo = async () => {
     const res = await jsSdk.invoke<{chatId?: string}>('getCurExternalChat')
 
-    if (!res.chatId) return
+    if (!res || !res.chatId) return
 
     const chatInfo = await fetchExternalChat(res.chatId || '').catch(e => console.error(e))
 
