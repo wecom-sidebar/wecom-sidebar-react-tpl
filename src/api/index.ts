@@ -63,7 +63,11 @@ export const fetchAuth = async (code: string) => {
 
 // 获取签名
 export const fetchSignatures = async () => {
-  const response = await api.get<TicketRes>('/api/qywx-utils/signatures')
+  const response = await api.get<TicketRes>('/api/qywx-utils/signatures', {
+    params: {
+      url: window.location.href
+    }
+  })
 
   return response.data;
 }
