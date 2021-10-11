@@ -1,6 +1,6 @@
 import apis from './jsSdk/apis';
-import jsSdk from "./index"
 import {TicketRes} from "../api/types"
+import jsSdk from "./index"
 
 export interface Config {
   corpId: string;

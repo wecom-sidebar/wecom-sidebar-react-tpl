@@ -1,5 +1,4 @@
 import compareVersions from 'compare-versions'
-export { mockWxSDK } from './utils';
 
 /**
  * jssdk 的 config 函数的封装
@@ -31,7 +30,7 @@ const agentConfig = (agentSetting: Omit<wx.AgentSetting, 'success' | 'fail'>): P
 /**
  * 根据 userAgent 检查当前企业微信版本号是否 < 3.0.24
  */
-const checkDeprecated = (): boolean => {
+const checkDeprecated = async (): Promise<boolean> => {
   const DEPRECATED_VERSION = '3.0.24'
 
   const versionRegexp = /wxwork\/([\d.]+)/;
@@ -64,11 +63,11 @@ const invoke = <Res = {}>(apiName: wx.Api, params = {}) => {
   });
 };
 
-const wecomJsSdk = {
+const _jsSdk = {
   checkDeprecated,
   config,
   agentConfig,
   invoke,
 };
 
-export default wecomJsSdk;
+export default _jsSdk;

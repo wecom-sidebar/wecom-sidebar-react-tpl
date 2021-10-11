@@ -1,10 +1,8 @@
 import {isMock} from "./env"
-import wecomJsSdk, {mockWxSDK} from "./jsSdk"
-import {WxSDK} from './jsSdk/types'
+import _jsSdk from "./jsSdk"
+import {invokeResMock, wxResMock} from "./mock"
+import {mockJsSdk} from "./jsSdk/utils"
 
-// Windows 传入的 jsSdk
-export const fakeJsSdk: Partial<WxSDK> = isMock && window.fakeJsSdk ? window.fakeJsSdk : {};
-
-const jsSdk = isMock ? mockWxSDK(fakeJsSdk) : wecomJsSdk;
+const jsSdk = isMock ? mockJsSdk(_jsSdk, wxResMock, invokeResMock) : _jsSdk;
 
 export default jsSdk
