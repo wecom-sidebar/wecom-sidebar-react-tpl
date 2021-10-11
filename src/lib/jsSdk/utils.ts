@@ -1,4 +1,4 @@
-import { JsSDK } from './types';
+import {JsSDK} from "./index";
 
 const fakeValue: Record<string, any> = {
   number: 0,

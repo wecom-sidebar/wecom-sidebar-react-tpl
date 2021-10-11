@@ -70,4 +70,6 @@ const _jsSdk = {
   invoke,
 };
 
+export type JsSDK = typeof _jsSdk;
+
 export default _jsSdk;

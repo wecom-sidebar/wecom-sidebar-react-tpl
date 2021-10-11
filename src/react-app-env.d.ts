@@ -1,5 +1,5 @@
 /// <reference types="react-scripts" />
-import {JsSDK} from "./lib/jsSdk/types"
+import {JsSDK} from "./lib/jsSdk";
 
 declare global {
   interface Window {
