@@ -553,6 +553,17 @@ declare namespace wx {
     callback: WxInvokeCallback
   )
 
+  // 进入微信客服消息界面
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/94870
+  declare function invoke(
+    api: 'navigateToKfChat',
+    params: {
+      openKfId: string; // 客服帐号ID
+      externalUserId?: string; // 微信客户ID，若没指定，则跳转到客服帐号的消息列表界面
+    },
+    callback: WxInvokeCallback
+  )
+
   // 隐藏分享按钮
   declare function hideOptionMenu(): void;
 }
