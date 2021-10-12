@@ -56,7 +56,12 @@ declare namespace wx {
     | 'setClipboardData'
     | 'wwapp.getOpenData'
     | 'wwapp.initWwOpenData'
-    | 'getCurExternalChat';
+    | 'getCurExternalChat'
+    | 'createSchoolPayment'
+    | 'startMeeting'
+    | 'startLiving'
+    | 'replayLiving'
+    | 'downloadLivingReplay'
 
   /**
    * 所有企业微信 SDK 的回调返回类型
@@ -132,7 +137,14 @@ declare namespace wx {
     }
   }
 
-  type Message = TextMessage | ImageMessage | VideoMessage | FileMessage | NewsMessage | MiniProgramMessage | LinkMessage
+  type Message =
+    TextMessage
+    | ImageMessage
+    | VideoMessage
+    | FileMessage
+    | NewsMessage
+    | MiniProgramMessage
+    | LinkMessage
 
   // 参与会话的互联企业成员
   interface CorpGroupUserId {
@@ -569,8 +581,8 @@ declare namespace wx {
   declare function invoke(
     api: 'startMeeting',
     params: {
-      meetingType : 1, // 会议类型。0-语音会议；1-视频会议
-      theme? : string, // 会议主题。最多20个UTF-8字符
+      meetingType: 1, // 会议类型。0-语音会议；1-视频会议
+      theme?: string, // 会议主题。最多20个UTF-8字符
       attendees?: string[], // 参会人员，内部同事列表。系统会忽略不合法的ID
       externalAttendees?: string[], // 参会人员，外部联系列表。要求与发起人必须是好友关系。系统会忽略不合法的ID
       deviceSns?: string[], // 设备序列号列表。支持添加已绑定的硬件设备。Mac端不支持
@@ -626,6 +638,20 @@ declare namespace wx {
       livingId: string; // 直播 Id
     },
     callback: WxInvokeCallback
+  )
+
+  // 发起班级收款
+  declare function invoke(
+    api: 'createSchoolPayment',
+    params: {
+      projectName?: string;  // 收款项目名称
+      amount?: number;  // 收款金额，每个学生需付费的金额，单位为分
+      payers?: {
+        students: string[], //需要收款的学生列表
+        departments: number[], //需要收款的家校通讯录部门列表、支持班级，年级，校区
+      }
+    },
+    callback: WxInvokeCallback<{ paymentId: string }>
   )
 
   // 隐藏分享按钮
