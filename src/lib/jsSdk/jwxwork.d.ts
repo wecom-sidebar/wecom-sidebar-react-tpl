@@ -313,6 +313,115 @@ declare namespace wx {
       error: WxFnCallback
   })
 
+  // 以下 API 为图像接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90528
+  // 获取本地图片接口
+  declare function getLocalImgData(params: {
+    localId: string, // 图片的localID
+    success: WxFnCallback<{
+      localData: string // base64 数据
+    }>
+  })
+
+  // 拍照或从手机相册中选图接口
+  declare function chooseImage(params: {
+    count: number, // 默认9
+    sizeType: Array<'original' | 'compressed'>, // 可以指定是原图还是压缩图，默认二者都有
+    sourceType: Array<'album', 'camera'>, // 可以指定来源是相册还是相机，默认二者都有
+    defaultCameraMode: 'normal' | 'batch', //表示进入拍照界面的默认模式，目前有normal与batch两种选择，normal表示普通单拍模式，batch表示连拍模式，不传该参数则为normal模式。从3.0.26版本开始支持front和batch_front两种值，其中front表示默认为前置摄像头单拍模式，batch_front表示默认为前置摄像头连拍模式。（注：用户进入拍照界面仍然可自由切换两种模式）
+    isSaveToAlbum: 0 | 1, //整型值，0表示拍照时不保存到系统相册，1表示自动保存，默认值是1
+    success: WxFnCallback<{
+      // 返回选定照片的本地ID列表，
+      // andriod中localId可以作为img标签的src属性显示图片；
+      // iOS应当使用 getLocalImgData 获取图片base64数据，从而用于img标签的显示（在img标签内使用 wx.chooseImage 的 localid 显示可能会不成功）
+      localIds: string[]
+    }>
+  })
+
+  // 预览图片接口
+  declare function previewImage(params: {
+    current: string, // 当前显示图片的http链接
+    urls: string[] // 需要预览的图片http链接列表
+  })
+
+  // 上传图片接口
+  declare function uploadImage(params: {
+    localId: string, // 需要上传的图片的本地ID，由chooseImage接口获得
+    isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
+    success: WxFnCallback<{
+      serverId: string; // 返回图片的服务器端ID
+    }>
+  })
+
+  // 下载图片接口
+  declare function downloadImage(params: {
+    serverId: string, // 需要下载的图片的服务器端ID，由uploadImage接口获得
+    isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
+    success: WxFnCallback<{
+      localId: string; // 返回图片下载后的本地ID
+    }>
+  })
+
+  // 以下为音频接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90529
+  // 开始录音接口
+  declare function startRecord();
+  // 停止录音接口
+  declare function stopRecord(params: {
+    success: WxFnCallback<{ localId: string }>
+  })
+  // 监听录音自动停止接口
+  declare function onVoiceRecordEnd(params: {
+    complete: WxFnCallback<{ localId: string }>
+  })
+  // 播放语音接口
+  declare function playVoice(params: {
+    localId: '' // 需要播放的音频的本地ID，由stopRecord接口获得
+  })
+  // 暂停播放接口
+  declare function pauseVoice(params: {
+    localId: '' // 需要暂停的音频的本地ID，由stopRecord接口获得
+  })
+  // 停止播放接口
+  declare function stopVoice(params: {
+    localId: string // 需要停止的音频的本地ID，由stopRecord接口获得
+  })
+  // 监听语音播放完毕接口
+  declare function onVoicePlayEnd(params: {
+    success: WxFnCallback<{
+      localId: string; // 返回音频的本地ID
+    }>
+  })
+  // 上传语音接口
+  declare function uploadVoice(params: {
+    localId: string, // 需要上传的音频的本地ID，由stopRecord接口获得
+    isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
+    success: WxFnCallback<{
+      serverId: string; // 返回音频的服务器端ID
+    }>
+  })
+  // 下载语音接口
+  declare function downloadVoice(params: {
+    serverId: string, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
+    isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
+    success: WxFnCallback<{
+      localId: string; // 返回音频的本地ID
+    }>
+  })
+  // 语音转文字接口
+  declare function translateVoice(params: {
+    localId: string, // 需要识别的音频的本地Id，由录音相关接口获得，音频时长不能超过60秒
+    isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
+    success: WxFnCallback<{
+      translateResult: any; // 语音识别的结果
+    }>
+  })
+
+  // 以下为文件接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90530
+  declare function previewFile(params: {
+    url: string, // 需要预览文件的地址(必填，可以使用相对路径)
+    name: string, // 需要预览文件的文件名，必须有带文件格式的后缀，例如.doc(不填的话取url的最后部分，最后部分是个包含格式后缀的文件名)
+    size: number // 需要预览文件的字节大小(必填，而且大小必须正确，否则会打开失败)
+  })
+
   // invoke ----------------------------------------------------------------------
   // SDK 调用函数
   declare function invoke<ExtraRes = {}>(
