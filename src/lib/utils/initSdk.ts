@@ -1,5 +1,5 @@
 import apis from '../jsSdk/apis';
-import jsSdk from "../index"
+import {jsSdk} from "../../index";
 
 export interface Config {
   corpId: string;
