@@ -4,7 +4,7 @@ import compareVersions from 'compare-versions'
  * jssdk 的 config 函数的封装
  * @param setting
  */
-const config = (setting: wx.ConfigParams): Promise<wx.ConfigCallbackRes | null> => {
+const config = (setting: wx.ConfigParams): Promise<wx.WxFnCallbackRes | null> => {
   return new Promise((resolve, reject) => {
     wx.config({ ...setting });
     wx.ready(() => resolve(null));
@@ -16,7 +16,7 @@ const config = (setting: wx.ConfigParams): Promise<wx.ConfigCallbackRes | null> 
  * jssdk 的 agentConfig 函数封装
  * @param agentSetting
  */
-const agentConfig = (agentSetting: Omit<wx.AgentConfigParams, 'success' | 'fail'>): Promise<wx.ConfigCallbackRes> => {
+const agentConfig = (agentSetting: Omit<wx.AgentConfigParams, 'success' | 'fail'>): Promise<wx.WxFnCallbackRes> => {
   return new Promise((resolve, reject) => {
     wx.agentConfig({
       ...agentSetting,
@@ -52,7 +52,7 @@ const checkDeprecated = async (): Promise<boolean> => {
  * @param params 传入参数
  */
 const invoke = <Res = {}>(apiName: wx.Api, params = {}) => {
-  return new Promise<wx.InvokeCallbackRes & Res>((resolve, reject) => {
+  return new Promise<wx.WxInvokeCallbackRes & Res>((resolve, reject) => {
     wx.invoke<Res>(apiName, params, res => {
       if (res.err_msg === `${apiName}:ok`) {
         resolve(res);
