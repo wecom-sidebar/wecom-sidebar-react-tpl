@@ -132,6 +132,8 @@ declare namespace wx {
     }
   }
 
+  type Message = TextMessage | ImageMessage | VideoMessage | FileMessage | NewsMessage | MiniProgramMessage | LinkMessage
+
   // 参与会话的互联企业成员
   interface CorpGroupUserId {
     corpId: string,                 // 企业CORPID
@@ -437,7 +439,8 @@ declare namespace wx {
       userIds?: string[],    //参与会话的企业成员列表，仅自建应用使用，第三方应用会忽略该字段
       openUserIds?: string[],// 参与会话的企业成员列表，仅第三方应用使用，自建应用会忽略该字段
       corpGroupUserIds?: CorpGroupUserId[]  // 非必填， 参与会话的互联企业成员列表
-    }
+    },
+    callback: WxInvokeCallback
   )
 
   // 变更企业互联群成员
@@ -449,7 +452,105 @@ declare namespace wx {
       userIdsToAdd?: string[],    //新增的企业成员列表，仅自建应用使用，第三方应用会忽略该字段
       openUserIdsToAdd?: string[],// 新增的企业成员列表，仅第三方应用使用，自建应用会忽略该字段
       corpGroupUserIdsToAdd?: CorpGroupUserId[]; // 非必填， 参与会话的互联企业成员列表
-    }
+    },
+    callback: WxInvokeCallback
+  )
+
+  // 外部联系人选人接口
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/91823
+  declare function invoke(
+    api: 'selectExternalContact',
+    params: {
+      filterType: 0 | 1, //0表示展示全部外部联系人列表，1表示仅展示未曾选择过的外部联系人。默认值为0；除了0与1，其他值非法。在企业微信2.4.22及以后版本支持该参数
+    },
+    callback: WxInvokeCallback<{
+      userIds: string[]; // 一堆外部联系人 id
+    }>
+  )
+
+  // 打开个人信息页接口
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/91824
+  declare function invoke(
+    api: 'openUserProfile',
+    params: {
+      type: 1 | 2, //1表示该userid是企业成员，2表示该userid是外部联系人
+      userid: string //可以是企业成员，也可以是外部联系人
+    },
+    callback: WxInvokeCallback
+  )
+
+  // 获取当前外部联系人userid
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/91825
+  declare function invoke(
+    api: 'getCurExternalContact',
+    params: {},
+    callback: WxInvokeCallback<{
+      userId: string; // 外部联系人 id
+    }>
+  )
+
+  // 获取当前客户群的群ID
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/92675
+  declare function invoke(
+    api: 'getCurExternalChat',
+    params: {},
+    callback: WxInvokeCallback<{
+      chatId: string; // 外部联系群 id
+    }>
+  )
+
+  // 群发消息给客户
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93562
+  declare function invoke(
+    api: 'shareToExternalContact',
+    params: {
+      text: {
+        content: string,    // 文本内容
+      };
+      attachments?: Array<ImageMessage | VideoMessage | LinkMessage | MiniProgramMessage | FileMessage>;
+    },
+    callback: WxInvokeCallback
+  )
+
+  // 群发消息到客户群
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93563
+  declare function invoke(
+    api: 'shareToExternalChat',
+    params: {
+      text: {
+        content: string,    // 文本内容
+      };
+      attachments?: Array<ImageMessage | VideoMessage | LinkMessage | MiniProgramMessage | FileMessage>;
+    },
+    callback: WxInvokeCallback
+  )
+
+  // 进入添加客户界面
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93235
+  declare function invoke(api: 'navigateToAddCustomer', params: {}, callback: WxInvokeCallback);
+
+  // 发表内容到客户朋友圈
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/94958
+  declare function invoke(
+    api: 'shareToExternalMoments',
+    params: {
+      text: {
+        content: string,    // 文本内容
+      };
+      attachments?: Array<ImageMessage | VideoMessage | LinkMessage | MiniProgramMessage | FileMessage>;
+    },
+    callback: WxInvokeCallback
+  )
+
+  // 设置朋友圈封面与签名
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/94959
+  declare function invoke(
+    api: 'updateMomentsSetting',
+    params: {
+      signature?: string,    // 个性签名
+      imgUrl?: string    // 封面url
+    },
+    callback: WxInvokeCallback
   )
 
   // 隐藏分享按钮
