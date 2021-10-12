@@ -77,8 +77,8 @@ declare namespace wx {
   /**
    * 所有企业微信 SDK 的回调函数
    */
-  type ConfigCallback<ExtraRes> = (res: ConfigCallback & ExtraRes) => void;
-  type InvokeCallback<ExtraRes> = (res: InvokeCallbackRes & ExtraRes) => void;
+  type ConfigCallback<ExtraRes = {}> = (res: ConfigCallbackRes & ExtraRes) => void;
+  type InvokeCallback<ExtraRes = {}> = (res: InvokeCallbackRes & ExtraRes) => void;
 
   // wx.fn 的通用传参
   interface Params {
@@ -126,7 +126,7 @@ declare namespace wx {
    * 通过ready接口处理成功验证
    * @param callback
    */
-  declare function ready(callback: Function);
+  declare function ready(callback: () => void);
 
   // error ----------------------------------------------------------------------
   /**
