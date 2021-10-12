@@ -4,10 +4,10 @@ import compareVersions from 'compare-versions'
  * jssdk 的 config 函数的封装
  * @param setting
  */
-const config = (setting: wx.ConfigParams): Promise<wx.ConfigCallbackRes> => {
+const config = (setting: wx.ConfigParams): Promise<wx.ConfigCallbackRes | null> => {
   return new Promise((resolve, reject) => {
     wx.config({ ...setting });
-    wx.ready(res => resolve(res));
+    wx.ready(() => resolve(null));
     wx.error(err => reject(err));
   });
 };
