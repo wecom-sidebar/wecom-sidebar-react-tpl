@@ -564,6 +564,70 @@ declare namespace wx {
     callback: WxInvokeCallback
   )
 
+  // 创建立即会议
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93830
+  declare function invoke(
+    api: 'startMeeting',
+    params: {
+      meetingType : 1, // 会议类型。0-语音会议；1-视频会议
+      theme? : string, // 会议主题。最多20个UTF-8字符
+      attendees?: string[], // 参会人员，内部同事列表。系统会忽略不合法的ID
+      externalAttendees?: string[], // 参会人员，外部联系列表。要求与发起人必须是好友关系。系统会忽略不合法的ID
+      deviceSns?: string[], // 设备序列号列表。支持添加已绑定的硬件设备。Mac端不支持
+    },
+    callback: WxInvokeCallback<{ meetingId: string }>
+  )
+
+  // 进入会议
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93831
+  declare function invoke(
+    api: 'startMeeting',
+    params: {
+      meetingId: string; // 会议 Id
+    },
+    callback: WxInvokeCallback<{ meetingId: string }>
+  )
+
+  // 创建直播
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93832
+  declare function invoke(
+    api: 'startLiving',
+    params: {
+      liveType: 0 | 1 | 2 | 3; // 直播类型，0-通用直播；1-企业培训；2-大班课；3-小班课。 Mac端只支持通用直播
+      theme?: string; // 直播主题。最多20个UTF-8字符
+    },
+    callback: WxInvokeCallback<{ livingId: string }>
+  )
+
+  // 进入直播
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93833
+  declare function invoke(
+    api: 'startLiving',
+    params: {
+      livingId: string; // 直播 Id
+    },
+    callback: WxInvokeCallback<{ livingId: string }>
+  )
+
+  // 观看直播回放
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93835
+  declare function invoke(
+    api: 'replayLiving',
+    params: {
+      livingId: string; // 直播 Id
+    },
+    callback: WxInvokeCallback
+  )
+
+  // 下载直播回放
+  declare function invoke(
+    api: 'downloadLivingReplay',
+    params: {
+      livingId: string; // 直播 Id
+    },
+    callback: WxInvokeCallback
+  )
+
   // 隐藏分享按钮
   declare function hideOptionMenu(): void;
 }
