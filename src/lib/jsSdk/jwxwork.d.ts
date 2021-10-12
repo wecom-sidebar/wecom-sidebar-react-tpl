@@ -146,6 +146,14 @@ declare namespace wx {
     | MiniProgramMessage
     | LinkMessage
 
+  // 分享内容
+  interface ShareContent {
+    title: string, // 分享标题
+    desc: string, // 分享描述
+    link: string, // 分享链接
+    imgUrl: string // 分享封面
+  }
+
   // 参与会话的互联企业成员
   interface CorpGroupUserId {
     corpId: string,                 // 企业CORPID
@@ -166,7 +174,6 @@ declare namespace wx {
     trigger?: Function;
   }
 
-  // checkJsApi ----------------------------------------------------------------------
   // 判断当前客户端版本是否支持指定JS接口
   interface checkJsApiParams {
     jsApiList: Api[]; // 需要检测的JS接口列表
@@ -180,7 +187,6 @@ declare namespace wx {
 
   declare function checkJsApi(params: checkJsApiParams);
 
-  // config ----------------------------------------------------------------------
   /**
    * 所有需要使用JS-SDK的页面必须先注入配置信息，否则将无法调用（同一个url仅需调用一次，
    * 对于变化url的SPA（single-page application）的web app可在每次url变化时进行调用）
@@ -198,15 +204,12 @@ declare namespace wx {
 
   declare function config(configParams: ConfigParams);
 
-  // ready ----------------------------------------------------------------------
   // 通过ready接口处理成功验证
   declare function ready(callback: () => void);
 
-  // error ----------------------------------------------------------------------
   // 通过error接口处理失败验证
   declare function error(callback: WxFnCallback);
 
-  // agentConfig ----------------------------------------------------------------------
   /**
    * config注入的是企业的身份与权限，而agentConfig注入的是应用的身份与权限。
    * 尤其是当调用者为第三方服务商时，通过config无法准确区分出调用者是哪个第三方应用，
@@ -227,7 +230,6 @@ declare namespace wx {
 
   declare function agentConfig(agentConfigParams: AgentConfigParams);
 
-  // openEnterpriseChat ----------------------------------------------------------------------
   // 打开会话，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93231
   declare function openEnterpriseChat(params: {
     // 注意：userIds和externalUserIds至少选填一个。内部群最多2000人；外部群最多500人；如果有微信联系人，最多40人
@@ -238,6 +240,78 @@ declare namespace wx {
     success: WxInvokeCallback<{ chatId: string }>
     fail: WxFnCallback;
   });
+
+  // 以下接口详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90523
+  // 获取“转发”按钮点击状态及自定义分享内容接口，
+  declare function onMenuShareAppMessage(params: ShareContent & {
+    success: () => void; // 用户确认分享后执行的回调函数
+    cancel: () => void; // 用户取消分享后执行的回调函数
+  })
+
+  // 获取“微信”按钮点击状态及自定义分享内容接口
+  declare function onMenuShareWechat(params: ShareContent & {
+    success: () => void; // 用户确认分享后执行的回调函数
+    cancel: () => void; // 用户取消分享后执行的回调函数
+  })
+
+  // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
+  declare function onMenuShareTimeline(params: Omit<ShareContent, 'desc'> & {
+    success: () => void; // 用户确认分享后执行的回调函数
+    cancel: () => void; // 用户取消分享后执行的回调函数
+  })
+
+  // 以下界面 API 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90524
+  // 监听页面返回事件
+  declare function onHistoryBack(callback: Function);
+
+  // 隐藏右上角菜单接口
+  declare function hideOptionMenu();
+
+  // 显示右上角菜单接口
+  declare function showOptionMenu();
+
+  // 关闭当前网页窗口接口
+  declare function closeWindow();
+
+  // 批量隐藏功能按钮接口
+  type MenuItem =
+    'menuItem:setFont'
+    | 'menuItem:refresh'
+    | 'menuItem:share:appMessage'
+    | 'menuItem:share:wechat'
+    | 'menuItem:favorite'
+    | 'menuItem:copyUrl'
+    | 'menuItem:openWithSafari'
+    | 'menuItem:share:email'
+
+  // 批量隐藏功能按钮接口
+  declare function hideMenuItems(params: {
+    menuList: MenuItem[] // 要隐藏的菜单项
+  })
+
+  // 批量显示功能按钮接口
+  declare function showMenuItems(params: {
+    menuList: MenuItem[] // 要显示的菜单项
+  })
+
+  // 隐藏所有非基础按钮接口
+  declare function hideAllNonBaseMenuItem();
+
+  // 显示所有功能按钮接口
+  declare function showAllNonBaseMenuItem();
+
+  // 用户截屏事件
+  declare function onUserCaptureScreen(callback: Function);
+
+  // 企业微信扫一扫
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90526
+  declare function scanQRCode(params: {
+      desc: string,
+      needResult: 0 | 1, // 默认为0，扫描结果由企业微信处理，1则直接返回扫描结果，
+      scanType: string[], // 可以指定扫二维码还是条形码（一维码），默认二者都有
+      success: WxFnCallback
+      error: WxFnCallback
+  })
 
   // invoke ----------------------------------------------------------------------
   // SDK 调用函数
@@ -654,6 +728,51 @@ declare namespace wx {
     callback: WxInvokeCallback<{ paymentId: string }>
   )
 
-  // 隐藏分享按钮
-  declare function hideOptionMenu(): void;
+  // 自定义转发到会话
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90523
+  declare function invoke(api: 'shareAppMessage', params: ShareContent, callback: WxInvokeCallback);
+
+  // 自定义转发到微信
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90523
+  declare function invoke(api: 'shareWechatMessage', params: ShareContent, callback: WxInvokeCallback);
+
+  // 打开系统默认浏览器
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90524
+  declare function invoke(
+    api: 'openDefaultBrowser',
+    params: {
+      url: string; // 在默认浏览器打开redirect_uri，并附加code参数；也可以直接指定要打开的url，此时不会附带上code参数。
+    },
+    callback: WxInvokeCallback
+  )
+
+  // 拉起电子发票列表
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90526
+  declare function invoke(
+    api: 'chooseInvoice',
+    params: {
+      timestamp: string, // 卡券签名时间戳
+      nonceStr: string, // 卡券签名随机串
+      signType: string, // 签名方式，默认 'SHA1'
+      cardSign: string, // 卡券签名
+    },
+    callback: WxInvokeCallback<{
+      choose_invoice_info: {
+        card_id: string;
+        encrypt_code: string;
+        app_id: string;
+      }
+    }>
+  )
+
+  // 跳转到小程序
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93114
+  declare function invoke(
+    api: 'launchMiniprogram',
+    params: {
+      appid: string, // 需跳转的小程序appid
+      path?: string, // 所需跳转的小程序内页面路径及参数。非必填
+    },
+    callback: WxInvokeCallback
+  )
 }
