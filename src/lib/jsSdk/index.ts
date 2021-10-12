@@ -4,7 +4,7 @@ import compareVersions from 'compare-versions'
  * jssdk 的 config 函数的封装
  * @param setting
  */
-const config = (setting: wx.Setting): Promise<wx.ConfigCallbackRes> => {
+const config = (setting: wx.ConfigParams): Promise<wx.ConfigCallbackRes> => {
   return new Promise((resolve, reject) => {
     wx.config({ ...setting });
     wx.ready(res => resolve(res));
@@ -16,7 +16,7 @@ const config = (setting: wx.Setting): Promise<wx.ConfigCallbackRes> => {
  * jssdk 的 agentConfig 函数封装
  * @param agentSetting
  */
-const agentConfig = (agentSetting: Omit<wx.AgentSetting, 'success' | 'fail'>): Promise<wx.ConfigCallbackRes> => {
+const agentConfig = (agentSetting: Omit<wx.AgentConfigParams, 'success' | 'fail'>): Promise<wx.ConfigCallbackRes> => {
   return new Promise((resolve, reject) => {
     wx.agentConfig({
       ...agentSetting,
