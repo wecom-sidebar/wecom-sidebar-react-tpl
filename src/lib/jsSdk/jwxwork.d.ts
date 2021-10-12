@@ -169,6 +169,124 @@ declare namespace wx {
     callback: InvokeCallback<ExtraRes>
   );
 
+  // 获取进入H5页面的入口环境
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/94326
+  declare function invoke(api: 'getContext', {}, callback: InvokeCallback<{
+    entry: 'normal' | 'contact_profile' | 'single_chat_tools' | 'group_chat_tools' | 'chat_attachment'; // 返回进入H5页面的入口类型
+    shareTicket: string; // 可用于调用getShareInfo接口
+  }>);
+
+  // 选人接口
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/91819
+  declare function invoke(
+    api: 'selectEnterpriseContact',
+    params: {
+      fromDepartmentId: -1 | 0,// 必填，表示打开的通讯录从指定的部门开始展示，-1表示自己所在部门开始, 0表示从最上层开始
+      mode: 'single' | 'multi',// 必填，选择模式，single表示单选，multi表示多选
+      type: string[],// 必填，选择限制类型，指定department、user中的一个或者多个
+      selectedDepartmentIds?: string[],// 非必填，已选部门ID列表。用于多次选人时可重入，single模式下请勿填入多个id
+      selectedUserIds?: string[]// 非必填，已选用户ID列表。用于多次选人时可重入，single模式下请勿填入多个id
+    },
+    callback: InvokeCallbackRes<{
+      result: string | {
+        departmentList: {
+          id: string; // 已选的单个部门ID
+          name: string; // 已选的单个部门名称
+        }[]; // 已选的部门列表
+        userList: {
+          id: string; // 已选的单个成员ID
+          name: string; // 已选的单个成员名称
+          avatar: string; // 已选的单个成员头像
+        }[] // 已选的用户
+      }
+    }>
+  )
+
+  // 打开个人信息页接口
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/91822
+  declare function invoke(
+    api: 'openUserProfile',
+    params: {
+      type: 1 | 2, // 1表示该userid是企业成员，2表示该userid是外部联系人
+      userid: string // 可以是企业成员，也可以是外部联系人
+    },
+    callback: InvokeCallbackRes
+  )
+
+  // 企业互联选人接口
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/94364
+  declare function invoke(
+    api: 'selectCorpGroupContact',
+    params: {
+      fromDepartmentId: -1 | 0;// 必填，表示打开的通讯录从指定的部门开始展示，-1表示打开的通讯录从自己所在部门开始展示, 0表示从最上层开始。移动端，当需要展开的部门不在应用可见范围内，则从应用的可见范围开始展开。
+      mode: 'single' | 'multi';// 必填，选择模式，single表示单选，multi表示多选
+      type: string[],// 必填，选择限制类型，指定department、user中的一个或者多个
+      selectedDepartmentIds?: string[],// 非必填，已选部门ID列表。用于多次选人时可重入
+      selectedUserIds?: string[],// 非必填，仅自建应用使用，第三方应用会忽略该字段，已选用户ID列表。用于多次选人时可重入
+      selectedOpenUserIds?: string[],// 非必填，仅第三方应用使用，自建应用会忽略该字段，已选用户ID列表。用于多次选人时可重入
+      selectedCorpGroupDepartmentIds?: { // 非必填，已选企业互联部门ID列表。用于多次选人时可重入
+        corpId: string;                 // 企业CORPID
+        departmentId: string;                 // 部门ID
+      }[];
+      selectedCorpGroupUserIds?: { // 非必填，已选企业互联用户ID列表。用于多次选人时可重入
+        corpId: string,                 // 企业CORPID
+        userId: string,                 // 成员ID，仅自建应用返回
+        openUserId: string                 // 成员OPEN_USERID，仅第三方应用返回
+      }[];
+    },
+    callback: InvokeCallback<{
+      result: string | {
+        departmentList: {
+          id: string; // 已选的单个部门ID
+        }[];
+        userList: {
+          id: string; // 已选的单个成员ID，仅自建应用返回
+          openUserId: string // 已选的单个成员ID，仅第三方应用返回
+        }[];
+        corpGroupDepartmentList: {
+          corpId: string; // 企业CORPID
+          id: string; // 已选的单个部门ID
+        }[];
+        corpGroupUserList: {
+          corpId: string; // 企业CORPID
+          id: string; // 已选的单个成员ID，仅自建应用返回
+          openUserId: string; // 已选的单个成员ID，仅第三方应用返回
+        }[];
+      }
+    }>
+  )
+
+  // 返回ticket的选人接口
+  // 详情：https://open.work.weixin.qq.com/api/doc/90001/90144/94516
+  declare function invoke(
+    api: 'selectPrivilegedContact',
+    params: {
+      fromDepartmentId: -1 | 0,// 必填，表示打开的通讯录从指定的部门开始展示，-1表示自己所在部门开始, 0表示从最上层开始
+      mode: 'multi' | 'single',// 必填，选择模式，single表示单选，multi表示多选
+      selectedContextContact?: 1 | 0    // 是否勾选当前环境的参与者。1表示是，0表示否。
+      selectedOpenUserIds?: string[], // 非必填，已选用户OpenID列表。single模式忽略该参数。
+      selectedTickets?: string[] // 非必填，已选ticket列表。single模式忽略该参数
+    },
+    callback: InvokeCallback<{
+      userList?: { // 已选的成员列表
+        openUserId: string; // 成员openUserId
+      }[];
+      selectedTicket: string;    // 已选的集合Ticket
+      expiresIn: number;    // ticket有效期
+      selectedUserCount: number;    // 用户选中的用户个数
+    }>
+  )
+
+  // 认领老师班级
+  // 详情：https://open.work.weixin.qq.com/api/doc/90001/90144/94546
+  declare function invoke(
+    api: 'claimClassAdmin',
+    params: {},
+    callback: InvokeCallback<{
+      departmentIds: string[]; // 认领的班级部门id列表
+    }>
+  )
+
   /**
    * 隐藏分享按钮
    */
