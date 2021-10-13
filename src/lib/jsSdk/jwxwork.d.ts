@@ -173,7 +173,7 @@ declare namespace wx {
   }
 
   // wx.fn 的通用传参
-  interface CommonParams extends WxFnCallback {
+  interface CommonParams extends WxFnCommonParams {
     cancel?: Function;
     trigger?: Function;
   }
