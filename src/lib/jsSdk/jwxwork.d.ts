@@ -165,11 +165,15 @@ declare namespace wx {
   type WxFnCallback<ExtraRes = {}> = (res: WxFnCallbackRes & ExtraRes) => void;
   type WxInvokeCallback<ExtraRes = {}> = (res: WxInvokeCallbackRes & ExtraRes) => void;
 
+  // 通用 WxFn 的参数
+  interface WxFnCommonParams<SuccessRes = {}, FailRes = {}, CompleteRes = {}> {
+    success?: WxFnCallback<SuccessRes>;
+    fail?: WxFnCallback<FailRes>;
+    complete?: WxFnCallback<CompleteRes>;
+  }
+
   // wx.fn 的通用传参
-  interface Params {
-    success?: WxInvokeCallback
-    fail?: WxInvokeCallback
-    complete?: Function;
+  interface CommonParams extends WxFnCallback {
     cancel?: Function;
     trigger?: Function;
   }
@@ -192,7 +196,7 @@ declare namespace wx {
    * 对于变化url的SPA（single-page application）的web app可在每次url变化时进行调用）
    * 详见：https://work.weixin.qq.com/api/doc/90000/90136/90514
    */
-  interface ConfigParams extends Params {
+  interface ConfigParams extends CommonParams {
     beta: boolean; // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
     debug: boolean; // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
     appId: string; // 必填，企业微信的corpID
@@ -216,48 +220,44 @@ declare namespace wx {
    * 而在部分场景下，又必须严谨区分出第三方应用的身份，此时即需要通过agentConfig来注入应用的身份信息。
    * 详见：https://work.weixin.qq.com/api/doc/90000/90136/90515
    */
-  interface AgentConfigParams extends Params {
+  interface AgentConfigParams extends CommonParams {
     corpid: string; // 必填，企业微信的corpid，必须与当前登录的企业一致
     agentid: string; // 必填，企业微信的应用id （e.g. 1000247）
     timestamp: number; // 必填，生成签名的时间戳
     nonceStr: string; // 必填，生成签名的随机串
     signature: string; // 必填，签名，见附录-JS-SDK使用权限签名算法
     jsApiList: API[]; // 必填
-    success?: WxFnCallback; // 成功回调
-    fail?: WxFnCallback; // 失败回调
-    complete?: WxFnCallback; // 失败或成功都会回调
   }
 
   declare function agentConfig(agentConfigParams: AgentConfigParams);
 
   // 打开会话，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/93231
-  declare function openEnterpriseChat(params: {
+  declare function openEnterpriseChat(params: WxFnCommonParams & {
     // 注意：userIds和externalUserIds至少选填一个。内部群最多2000人；外部群最多500人；如果有微信联系人，最多40人
     userIds: string,    //参与会话的企业成员列表，格式为userid1;userid2;...，用分号隔开。
     externalUserIds: string, // 参与会话的外部联系人列表，格式为userId1;userId2;…，用分号隔开。
     groupName: string,  // 会话名称。单聊时该参数传入空字符串""即可。
     chatId: string, // 若要打开已有会话，需指定此参数。如果是新建会话，chatId必须为空串
-    success: WxInvokeCallback<{ chatId: string }>
-    fail: WxFnCallback;
+    success?: WxInvokeCallback<{ chatId: string }>
   });
 
   // 以下接口详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90523
   // 获取“转发”按钮点击状态及自定义分享内容接口，
-  declare function onMenuShareAppMessage(params: ShareContent & {
-    success: () => void; // 用户确认分享后执行的回调函数
-    cancel: () => void; // 用户取消分享后执行的回调函数
+  declare function onMenuShareAppMessage(params: WxFnCommonParams & ShareContent & {
+    success?: () => void; // 用户确认分享后执行的回调函数
+    cancel?: () => void; // 用户取消分享后执行的回调函数
   })
 
   // 获取“微信”按钮点击状态及自定义分享内容接口
-  declare function onMenuShareWechat(params: ShareContent & {
-    success: () => void; // 用户确认分享后执行的回调函数
-    cancel: () => void; // 用户取消分享后执行的回调函数
+  declare function onMenuShareWechat(params: WxFnCommonParams & ShareContent & {
+    success?: () => void; // 用户确认分享后执行的回调函数
+    cancel?: () => void; // 用户取消分享后执行的回调函数
   })
 
   // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
-  declare function onMenuShareTimeline(params: Omit<ShareContent, 'desc'> & {
-    success: () => void; // 用户确认分享后执行的回调函数
-    cancel: () => void; // 用户取消分享后执行的回调函数
+  declare function onMenuShareTimeline(params: WxFnCommonParams & Omit<ShareContent, 'desc'> & {
+    success?: () => void; // 用户确认分享后执行的回调函数
+    cancel?: () => void; // 用户取消分享后执行的回调函数
   })
 
   // 以下界面 API 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90524
@@ -305,31 +305,29 @@ declare namespace wx {
 
   // 企业微信扫一扫
   // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90526
-  declare function scanQRCode(params: {
-      desc: string,
-      needResult: 0 | 1, // 默认为0，扫描结果由企业微信处理，1则直接返回扫描结果，
-      scanType: string[], // 可以指定扫二维码还是条形码（一维码），默认二者都有
-      success: WxFnCallback
-      error: WxFnCallback
+  declare function scanQRCode(params: WxFnCommonParams & {
+    desc: string,
+    needResult: 0 | 1, // 默认为0，扫描结果由企业微信处理，1则直接返回扫描结果，
+    scanType: string[], // 可以指定扫二维码还是条形码（一维码），默认二者都有
   })
 
   // 以下 API 为图像接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90528
   // 获取本地图片接口
-  declare function getLocalImgData(params: {
+  declare function getLocalImgData(params: WxFnCommonParams & {
     localId: string, // 图片的localID
-    success: WxFnCallback<{
+    success?: WxFnCallback<{
       localData: string // base64 数据
     }>
   })
 
   // 拍照或从手机相册中选图接口
-  declare function chooseImage(params: {
+  declare function chooseImage(params: WxFnCommonParams & {
     count: number, // 默认9
     sizeType: Array<'original' | 'compressed'>, // 可以指定是原图还是压缩图，默认二者都有
     sourceType: Array<'album', 'camera'>, // 可以指定来源是相册还是相机，默认二者都有
     defaultCameraMode: 'normal' | 'batch', //表示进入拍照界面的默认模式，目前有normal与batch两种选择，normal表示普通单拍模式，batch表示连拍模式，不传该参数则为normal模式。从3.0.26版本开始支持front和batch_front两种值，其中front表示默认为前置摄像头单拍模式，batch_front表示默认为前置摄像头连拍模式。（注：用户进入拍照界面仍然可自由切换两种模式）
     isSaveToAlbum: 0 | 1, //整型值，0表示拍照时不保存到系统相册，1表示自动保存，默认值是1
-    success: WxFnCallback<{
+    success?: WxFnCallback<{
       // 返回选定照片的本地ID列表，
       // andriod中localId可以作为img标签的src属性显示图片；
       // iOS应当使用 getLocalImgData 获取图片base64数据，从而用于img标签的显示（在img标签内使用 wx.chooseImage 的 localid 显示可能会不成功）
@@ -344,19 +342,19 @@ declare namespace wx {
   })
 
   // 上传图片接口
-  declare function uploadImage(params: {
+  declare function uploadImage(params: WxFnCommonParams & {
     localId: string, // 需要上传的图片的本地ID，由chooseImage接口获得
     isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
-    success: WxFnCallback<{
+    success?: WxFnCallback<{
       serverId: string; // 返回图片的服务器端ID
     }>
   })
 
   // 下载图片接口
-  declare function downloadImage(params: {
+  declare function downloadImage(params: WxFnCommonParams & {
     serverId: string, // 需要下载的图片的服务器端ID，由uploadImage接口获得
     isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
-    success: WxFnCallback<{
+    success?: WxFnCallback<{
       localId: string; // 返回图片下载后的本地ID
     }>
   })
@@ -364,53 +362,62 @@ declare namespace wx {
   // 以下为音频接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90529
   // 开始录音接口
   declare function startRecord();
+
   // 停止录音接口
-  declare function stopRecord(params: {
-    success: WxFnCallback<{ localId: string }>
+  declare function stopRecord(params: WxFnCommonParams & {
+    success?: WxFnCallback<{ localId: string }>
   })
+
   // 监听录音自动停止接口
-  declare function onVoiceRecordEnd(params: {
-    complete: WxFnCallback<{ localId: string }>
+  declare function onVoiceRecordEnd(params: WxFnCommonParams & {
+    complete?: WxFnCallback<{ localId: string }>
   })
+
   // 播放语音接口
   declare function playVoice(params: {
     localId: '' // 需要播放的音频的本地ID，由stopRecord接口获得
   })
+
   // 暂停播放接口
   declare function pauseVoice(params: {
     localId: '' // 需要暂停的音频的本地ID，由stopRecord接口获得
   })
+
   // 停止播放接口
   declare function stopVoice(params: {
     localId: string // 需要停止的音频的本地ID，由stopRecord接口获得
   })
+
   // 监听语音播放完毕接口
-  declare function onVoicePlayEnd(params: {
-    success: WxFnCallback<{
+  declare function onVoicePlayEnd(params: WxFnCommonParams & {
+    success?: WxFnCallback<{
       localId: string; // 返回音频的本地ID
     }>
   })
+
   // 上传语音接口
-  declare function uploadVoice(params: {
+  declare function uploadVoice(params: WxFnCommonParams & {
     localId: string, // 需要上传的音频的本地ID，由stopRecord接口获得
     isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
-    success: WxFnCallback<{
+    success?: WxFnCallback<{
       serverId: string; // 返回音频的服务器端ID
     }>
   })
+
   // 下载语音接口
-  declare function downloadVoice(params: {
+  declare function downloadVoice(params: WxFnCommonParams & {
     serverId: string, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
     isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
-    success: WxFnCallback<{
+    success?: WxFnCallback<{
       localId: string; // 返回音频的本地ID
     }>
   })
+
   // 语音转文字接口
-  declare function translateVoice(params: {
+  declare function translateVoice(params: WxFnCommonParams & {
     localId: string, // 需要识别的音频的本地Id，由录音相关接口获得，音频时长不能超过60秒
     isShowProgressTips: 0 | 1, // 默认为1，显示进度提示
-    success: WxFnCallback<{
+    success?: WxFnCallback<{
       translateResult: any; // 语音识别的结果
     }>
   })
@@ -421,6 +428,279 @@ declare namespace wx {
     name: string, // 需要预览文件的文件名，必须有带文件格式的后缀，例如.doc(不填的话取url的最后部分，最后部分是个包含格式后缀的文件名)
     size: number // 需要预览文件的字节大小(必填，而且大小必须正确，否则会打开失败)
   })
+
+  // 以下为 Wi-Fi 接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90532
+  // 打开 Wi-Fi 模块
+  declare function startWifi(params: WxFnCommonParams)
+
+  // 关闭 Wi-Fi 模块
+  declare function stopWifi(params: WxFnCommonParams)
+
+  // 连接 Wi-Fi
+  declare function connectWifi(params: WxFnCommonParams & {
+    SSID: string,  // 设备SSID
+    BSSID?: string,  // 设备BSSID
+    password?: string,  // 设备密码
+  })
+
+  // 获取 Wi-Fi 列表
+  declare function getWifiList(params: WxFnCommonParams)
+
+  // 监听获取到 Wi-Fi 列表事件
+  interface WifiInfo {
+    SSID: string; // Wi-Fi SSID
+    BSSID: string,  // Wi-Fi BSSID
+    secure: boolean,  // Wi-Fi 是否安全
+    signalStrength: number; // Wi-Fi 信号强度
+  }
+
+  declare function onGetWifiList(callback: WxFnCallback<{
+    wifiList: WifiInfo[]
+  }>)
+
+  // 监听连接上 Wi-Fi 的事件
+  declare function onWifiConnected(callback: WxFnCallback<{
+    wifi: WifiInfo;
+  }>)
+
+  // 获取已连接中的 Wi-Fi 信息
+  declare function getConnectedWifi(params: WxFnCommonParams & {
+    success?: WxFnCallback<{
+      wifi: WifiInfo;
+    }>
+  })
+
+  // 以下为蓝牙接口列表
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90533
+  interface BluetoothInfo {
+    discovering: boolean; // 是否正在搜索设备
+    available: boolean; // 蓝牙适配器是否可用
+  }
+
+  interface BluetoothDevice {
+    name?: string; // 蓝牙设备名称，某些设备可能没有
+    deviceId: string; // 用于区分设备的 id
+    RSSI: number; // 当前蓝牙设备的信号强度
+    advertisData: ArrayBuffer; // 当前蓝牙设备的广播数据段中的ManufacturerData数据段
+    advertisServiceUUIDs: string[]; // 当前蓝牙设备的广播数据段中的ServiceUUIDs数据段
+    localName: string; // 当前蓝牙设备的广播数据段中的LocalName数据段
+    serviceData: ArrayBuffer; // 当前蓝牙设备的广播数据段中的ServiceData数据段
+  }
+
+  // 初始化蓝牙模块
+  declare function openBluetoothAdapter(params: WxFnCommonParams);
+
+  // 关闭蓝牙模块，使其进入未初始化状态。
+  declare function closeBluetoothAdapter(params: WxFnCommonParams);
+
+  // 获取本机蓝牙适配器状态
+  declare function getBluetoothAdapterState(params: WxFnCommonParams & {
+    success?: WxFnCallback<BluetoothInfo>
+  })
+
+  // 监听蓝牙适配器状态变化事件
+  declare function onBluetoothAdapterStateChange(callback: (bluetoothInfo: BluetoothInfo) => void);
+
+  // 开始搜寻附近的蓝牙外围设备
+  declare function startBluetoothDevicesDiscovery(params: WxFnCommonParams & {
+    services?: string[] // 蓝牙设备主 service 的 uuid 列表
+    allowDuplicatesKey?: boolean; // 是否允许重复上报同一设备， 如果允许重复上报，则onDeviceFound 方法会多次上报同一设备，但是 RSSI 值会有不同
+    interval?: number; // 上报设备的间隔，默认为0，意思是找到新设备立即上报，否则根据传入的间隔上报
+  })
+
+  // 停止搜寻附近的蓝牙外围设备
+  declare function stopBluetoothDevicesDiscovery(params: WxFnCommonParams);
+
+  // 获取在蓝牙模块生效期间所有已发现的蓝牙设备，包括已经和本机处于连接状态的设备
+  declare function getBluetoothDevices(params: WxFnCommonParams & {
+    success: WxFnCallback<{
+      devices: BluetoothDevice[] // uuid 对应的的已连接设备列表
+    }>
+  })
+
+  // 监听寻找到新设备的事件
+  declare function onBluetoothDeviceFound(callback: (devices: BluetoothDevice[]) => void);
+
+  // 根据 uuid 获取处于已连接状态的设备
+  declare function getConnectedBluetoothDevices(params: WxFnCommonParams & {
+    services: string[]; // 蓝牙设备主 service 的 uuid 列表
+    success: WxFnCallback<{
+      devices: Array<Pick<BluetoothDevice, 'name' | 'deviceId'>> // 搜索到的设备列表
+    }>
+  });
+
+  // 连接低功耗蓝牙设备
+  declare function createBLEConnection(params: WxFnCommonParams & {
+    deviceId: string; // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+  })
+
+  // 断开与低功耗蓝牙设备的连接
+  declare function closeBLEConnection(params: WxFnCommonParams & {
+    deviceId: string; // 蓝牙设备 id，参考 getDevices 接口
+  })
+
+  // 监听低功耗蓝牙连接状态的改变事件
+  declare function onBLEConnectionStateChange(callback: (res: {
+    deviceId: string; // 蓝牙设备 id，参考 device 对象
+    connected: boolean; // 连接目前的状态
+  }) => void)
+
+  // 获取蓝牙设备所有 service（服务）
+  declare function getBLEDeviceServices(params: WxFnCommonParams & {
+    deviceId: string; // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+    success?: WxFnCallback<{
+      services: {
+        uuid: string; // 蓝牙设备服务的 uuid
+        isPrimary: boolean // 该服务是否为主服务
+      }
+    }>
+  })
+
+  // 获取蓝牙设备某个服务中的所有 characteristic（特征值）
+  interface BLEDeviceCharacteristics{
+    uuid: string;
+    properties: {
+      read: boolean; // 该特征值是否支持 read 操作
+      write: boolean; // 该特征值是否支持 write 操作
+      notify: boolean; // 该特征值是否支持 notify 操作
+      indicate: boolean; // 该特征值是否支持 indicate 操作
+    }
+  }
+
+  declare function getBLEDeviceCharacteristics(params: WxFnCommonParams & {
+    deviceId: string; // 蓝牙设备 id，参考 getDevices 接口
+    serviceId: string; // 蓝牙服务 uuid
+    success?: WxFnCallback<{
+      characteristics: BLEDeviceCharacteristics[];
+    }>
+  })
+
+  // 监听变化
+  declare function onBLECharacteristicValueChange(callback: (res: {
+    deviceId: string; // 蓝牙设备 id，参考 device 对象
+    serviceId: string; // 特征值所属服务 uuid
+    characteristicId: string; // 特征值 uuid
+    value: ArrayBuffer; // 特征值最新的值 （注意：vConsole 无法打印出 ArrayBuffer 类型数据）
+  }) => void);
+
+  // 读取低功耗蓝牙设备的特征值的二进制数据值。
+  declare function readBLECharacteristicValue(params: WxFnCommonParams & {
+    // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接  [**new**]
+    deviceId: string,
+    // 这里的 serviceId 需要在上面的 getBLEDeviceServices 接口中获取
+    serviceId: string,
+    // 这里的 characteristicId 需要在上面的 getBLEDeviceCharacteristics 接口中获取
+    characteristicId: string,
+  });
+
+  // 向低功耗蓝牙设备特征值中写入二进制数据
+  declare function writeBLECharacteristicValue(params: {
+    // 这里的 deviceId 需要在上面的 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+    deviceId: string,
+    // 这里的 serviceId 需要在上面的 getBLEDeviceServices 接口中获取
+    serviceId: string,
+    // 这里的 characteristicId 需要在上面的 getBLEDeviceCharacteristics 接口中获取
+    characteristicId: string,
+    // 这里的value是ArrayBuffer类型
+    value: ArrayBuffer,
+  })
+
+  // 启用低功耗蓝牙设备特征值变化时的 notify 功能，订阅特征值
+  declare function notifyBLECharacteristicValueChange(params: {
+    state: boolean, // 启用 notify 功能
+    // 这里的 deviceId 需要已经通过 createBLEConnection 与对应设备建立链接
+    deviceId: string,
+    // 这里的 serviceId 需要在上面的 getBLEDeviceServices 接口中获取
+    serviceId: string,
+    // 这里的 characteristicId 需要在上面的 getBLEDeviceCharacteristics 接口中获取
+    characteristicId: string,
+  })
+
+  // 以下为 iBeacon 的接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90534
+  interface Beacon {
+    uuid: string; // iBeacon 设备广播的 uuid
+    major: string; // iBeacon 设备的主 id
+    minor: string; // iBeacon 设备的次 id
+    proximity: number; // 表示设备距离的枚举值
+    accuracy: number; // iBeacon 设备的距离
+    rssi: number; // 表示设备的信号强度
+  }
+  // 开始搜索附近的iBeacon设备
+  declare function startBeaconDiscovery(params: WxFnCommonParams & {
+    uuids: StringArray; // iBeacon设备广播的 uuids
+  })
+
+  // 停止搜索附近的iBeacon设备
+  declare function stopBeaconDiscovery(params: WxFnCommonParams);
+
+  // 获取所有已搜索到的iBeacon设备
+  declare function getBeacons(params: WxFnCommonParams & {
+    success?: WxFnCallback<{
+      beacons: Beacon[]; // 当前搜寻到的所有 iBeacon 设备列表
+    }>
+  });
+
+  // 监听 iBeacon 设备的更新事件
+  declare function onBeaconUpdate(callback: (res: {
+    beacons: Beacon[]
+  }) => void);
+
+  // 监听 iBeacon 的服务变化
+  declare function onBeaconServiceChange(callback: (res: {
+    available: boolean; // 服务目前是否可用
+    discovering: boolean; // 目前是否处于搜索状态
+  }) => void);
+
+  // 以下为剪贴板接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90535
+  // 设置系统剪贴板的内容
+  declare function setClipboardData(params: WxFnCommonParams & {
+    data: string; // 剪贴板的内容
+  })
+
+  // 获取系统剪贴板内容
+  declare function getClipboardData(params: WxFnCommonParams & {
+    success?: WxFnCallback<{
+      data: string; // 剪贴板的内容
+    }>
+  })
+
+  // 以下为网络状态的接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90536
+  // 获取网络状态接口
+  declare function getNetworkType(params: WxFnCommonParams & {
+    success?: WxFnCallback<{
+      isConnected: boolean; // 当前是否有网络连接
+      networkType: 'wifi' | '2g' | '3g' | '4g' | 'none' | 'unknown'
+    }>
+  })
+
+  // 以下为地理位置的接口，详见：https://open.work.weixin.qq.com/api/doc/90001/90144/90537
+  // 使用企业微信内置地图查看位置接口
+  declare function openLocation(params: {
+    latitude: number, // 纬度，浮点数，范围为90 ~ -90
+    longitude: number, // 经度，浮点数，范围为180 ~ -180。
+    name: string, // 位置名
+    address: string, // 地址详情说明
+    scale: number, // 地图缩放级别,整形值,范围从1~28。默认为16
+  })
+
+  // 获取地理位置接口
+  declare function getLocation(params: WxFnCommonParams & {
+    type: 'wgs84' | 'gcj02', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+    success?: WxFnCallback<{
+      latitude: number; // 纬度，浮点数，范围为90 ~ -90
+      longitude: number; // 经度，浮点数，范围为180 ~ -180。
+      speed: number; // 速度，以米/每秒计
+      accuracy: number; // 位置精度
+    }>
+  })
+
+  // 监听地理位置变化
+  declare function onLocationChange(callback: (res: {
+    latitude: number; // 纬度，浮点数，范围为90 ~ -90
+    longitude: number; // 经度，浮点数，范围为180 ~ -180。
+    speed: number; // 速度，以米/每秒计
+    accuracy: number; // 位置精度
+  }) => void)
 
   // invoke ----------------------------------------------------------------------
   // SDK 调用函数
@@ -884,4 +1164,17 @@ declare namespace wx {
     },
     callback: WxInvokeCallback
   )
+
+  // 打开持续定位接口
+  declare function invoke(
+    api: 'startAutoLBS',
+    params: {
+      type: 'gcj02' | 'wgs84', // wgs84是gps坐标，gcj02是火星坐标
+    },
+    callback: WxInvokeCallback
+  )
+
+  // 进入应用客服会话
+  // 详见：https://open.work.weixin.qq.com/api/doc/90001/90144/95181
+  declare function invoke(api: 'openThirdAppServiceChat', params: {}, callback: WxInvokeCallback);
 }
