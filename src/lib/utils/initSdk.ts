@@ -29,6 +29,8 @@ const initSdk = async (config: Config, getSignatures: GetSignatures) => {
   }).catch(e => {
     console.error(e)
   });
+
+  wx.error(console.error);
 };
 
 export default initSdk
