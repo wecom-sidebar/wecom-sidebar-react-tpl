@@ -13,7 +13,7 @@ const Actions: React.FC = () => {
       text: {
         content: msg
       }
-    }).catch(e => console.error(e))
+    });
   }, [msg])
 
   return (

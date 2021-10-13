@@ -5,10 +5,9 @@ import compareVersions from 'compare-versions'
  * @param setting
  */
 const config = (setting: wx.ConfigParams): Promise<wx.WxFnCallbackRes | null> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     wx.config({ ...setting });
     wx.ready(() => resolve(null));
-    wx.error(err => reject(err));
   });
 };
 
@@ -51,14 +50,14 @@ const checkDeprecated = async (): Promise<boolean> => {
  * @param apiName api 名称
  * @param params 传入参数
  */
-const invoke = <Res = {}>(apiName: wx.Api, params = {}) => {
-  return new Promise<wx.WxInvokeCallbackRes & Res>((resolve, reject) => {
+const invoke = <Res = { hasError: boolean }>(apiName: wx.Api, params = {}) => {
+  return new Promise<wx.WxInvokeCallbackRes & Res>((resolve) => {
     wx.invoke<Res>(apiName, params, res => {
-      if (res.err_msg === `${apiName}:ok`) {
-        resolve(res);
-      } else {
-        reject(res);
-      }
+      const hasError = res.err_msg !== `${apiName}:ok`
+      resolve({
+        ...res,
+        hasError
+      })
     });
   });
 };
