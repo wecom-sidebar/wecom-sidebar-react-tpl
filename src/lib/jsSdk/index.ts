@@ -54,10 +54,13 @@ const invoke = <Res = { hasError: boolean }>(apiName: wx.Api, params = {}) => {
   return new Promise<wx.WxInvokeCallbackRes & Res>((resolve) => {
     wx.invoke<Res>(apiName, params, res => {
       const hasError = res.err_msg !== `${apiName}:ok`
-      resolve({
-        ...res,
-        hasError
-      })
+
+      if (hasError) {
+        // 错误日志
+        console.error(apiName, params, res);
+      }
+
+      resolve({ ...res, hasError })
     });
   });
 };
