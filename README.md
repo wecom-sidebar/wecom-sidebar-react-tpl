@@ -8,6 +8,7 @@
 - [x] `wx.agentConfig`, `wx.config`, `wx.invoke` 函数封装
 - [x] 侧边栏重定向获取用户身份 `checkRedirect`，以及 JsSDK 的初始化步骤 `initSdk`
 - [x] Mock 侧边栏 JsSdk，**使其可以在浏览器上直接调试！**
+- [X] TS 支持
 - [ ] React Router 的示例
 
 ## 基础配置
