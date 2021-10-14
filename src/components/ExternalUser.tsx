@@ -11,7 +11,7 @@ const ExternalUser: React.FC = () => {
   const [externalUser, setExternalUser] = useState<ExternalUserResponse['external_contact'] | void>()
 
   const getExternalUserInfo = async () => {
-    const res = await jsSdk.invoke<{userId?: string}>('getCurExternalContact')
+    const res = await jsSdk.invoke<{userId?: string}>('getCurExternalContact', {})
 
     if (!res || !res.userId) return
 

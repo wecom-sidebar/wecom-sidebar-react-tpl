@@ -8,7 +8,7 @@ const ExternalChat: React.FC = () => {
   const [externalChat, setExternalChat] = useState<ExternalChatResponse['group_chat'] | void>()
 
   const getExternalChatInfo = async () => {
-    const res = await jsSdk.invoke<{chatId?: string}>('getCurExternalChat')
+    const res = await jsSdk.invoke<{chatId?: string}>('getCurExternalChat', {})
 
     if (!res || !res.chatId) return
 
