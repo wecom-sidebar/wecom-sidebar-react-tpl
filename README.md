@@ -42,6 +42,32 @@ export default config
 //backend.com http://127.0.0.1:5000
 ```
 
+## Mock
+
+**此功能可以使得你在浏览器上直接调试侧边栏应用！**
+
+**在浏览器模式下，会 Mock `jsSdk`，默认回调为空函数，并打上对应日志。你也可以在 `src/mock.ts` 下可以添加对 `wx.fn` 和 `wx.invoke` 这些函数的 Mock 值以及 Mock 函数。**
+
+**如果你不想将 Mock 写死在项目上，你也可以在 Whistle 配置上添加 JS 文件，在全局注入对应的 Mock 值和回调函数。**
+
+```js
+// 可在这里自由 mock wx.invoke 的内容
+window.invokeResMock = {
+  'getCurExternalContact': {
+    userId: 'xxxxx'
+  },
+}
+
+// 可在这里自由 wx.fn 的内容
+window.wxResMock = {
+  'agentConfig': () => {
+    console.log('mock agent config')
+  },
+}
+```
+
+这里对应的 Mock 关系 Mapper 有 `wxResMock` 和 `invokeResMock` 分别对 `wx.fn` 和 `wx.invoke('api', callback')` 两种调用方式进行 Mock。
+
 ## 启动
 
 启动项目
