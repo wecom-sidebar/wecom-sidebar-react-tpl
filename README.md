@@ -2,6 +2,14 @@
 
 企业微信侧边栏前端开发模板
 
+## 功能
+
+- [x] 一份 [企业侧边栏客户端](https://open.work.weixin.qq.com/api/doc/90001/90144/90545) 模板
+- [x] `wx.agentConfig`, `wx.config`, `wx.invoke` 函数封装
+- [x] 侧边栏重定向获取用户身份 `checkRedirect`，以及 JsSDK 的初始化步骤 `initSdk`
+- [x] Mock 侧边栏 JsSdk，**使其可以在浏览器上直接调试！**
+- [ ] React Router 的示例
+
 ## 基础配置
 
 启动项目需要用到 `agentId` 和 `corpId`，需要创建 `src/_config.ts`（目前已隐藏），示例
