@@ -1,4 +1,4 @@
-# wecom-sidebar-frontend-template
+# wecom-sidebar-react-tpl
 
 企业微信侧边栏前端开发模板
 
