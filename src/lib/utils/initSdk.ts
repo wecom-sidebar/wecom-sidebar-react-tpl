@@ -19,7 +19,7 @@ const initSdk = async (config: Config, getSignatures: GetSignatures) => {
   // 获取 ticket
   const signaturesRes = await getSignatures();
 
-  await jsSdk.agentConfig({
+  const agentConfigRes = await jsSdk.agentConfig({
     corpid: corpId,
     agentid: agentId,
     timestamp: signaturesRes.meta.timestamp,
@@ -29,6 +29,8 @@ const initSdk = async (config: Config, getSignatures: GetSignatures) => {
   }).catch(e => {
     console.error(e)
   });
+
+  console.log('agentConfig res', agentConfigRes);
 
   wx.error(console.error);
 };

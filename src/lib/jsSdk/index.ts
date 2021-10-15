@@ -21,7 +21,6 @@ const agentConfig = (agentSetting: Omit<wx.AgentConfigParams, 'success' | 'fail'
       ...agentSetting,
       success: resolve,
       fail: reject,
-      complete: resolve,
     });
   });
 };
