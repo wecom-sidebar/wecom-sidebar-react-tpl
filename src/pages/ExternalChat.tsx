@@ -13,6 +13,8 @@ const ExternalChat: React.FC = () => {
 
     if (!res || !res.chatId) return
 
+    console.log('外部联系群 ID', res.chatId);
+
     const chatInfo = await fetchExternalChat(res.chatId || '').catch(e => console.error(e))
 
     setExternalChat(chatInfo)

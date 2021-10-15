@@ -16,6 +16,8 @@ const ExternalUser: React.FC = () => {
 
     if (!res || !res.userId) return
 
+    console.log('外部联系人 ID', res.userId);
+
     const userInfo = await fetchExternalUser(res.userId).catch(e => console.error(e))
 
     setExternalUser(userInfo)

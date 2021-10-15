@@ -36,7 +36,8 @@ export const fetchExternalUser = async (externalUserId: string, cursor?: string)
 export const fetchExternalChat = async (externalChatId: string) => {
   const response = await api.get<ExternalChatResponse>('/api/qywx-proxy/externalcontact/groupchat/get', {
     params: {
-      chat_id: externalChatId
+      chat_id: externalChatId,
+      need_name : 1
     }
   })
 
