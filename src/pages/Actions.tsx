@@ -1,6 +1,9 @@
 import * as React from 'react'
 import {useCallback, useState} from 'react'
 import {jsSdk} from "../index";
+import {Button, Input} from "antd";
+
+const {TextArea} = Input
 
 const Actions: React.FC = () => {
   const [msg, setMsg] = useState<string>('')
@@ -20,11 +23,11 @@ const Actions: React.FC = () => {
     <div>
       <h2>功能</h2>
 
-      <textarea style={{width: '100%'}} value={msg} onChange={e => setMsg(e.target.value)}/>
+      <TextArea style={{width: '100%'}} value={msg} onChange={e => setMsg(e.target.value)}/>
 
-      <button onClick={sendMsg}>
+      <Button type="primary" onClick={sendMsg}>
         sendChatMessage
-      </button>
+      </Button>
     </div>
   )
 }
