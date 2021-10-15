@@ -34,7 +34,7 @@ export const fetchExternalUser = async (externalUserId: string, cursor?: string)
 
 // 根据 externalChatId 获取 chat 信息
 export const fetchExternalChat = async (externalChatId: string) => {
-  const response = await api.get<ExternalChatResponse>('/api/qywx-proxy/externalcontact/groupchat/ge', {
+  const response = await api.get<ExternalChatResponse>('/api/qywx-proxy/externalcontact/groupchat/get', {
     params: {
       chat_id: externalChatId
     }
