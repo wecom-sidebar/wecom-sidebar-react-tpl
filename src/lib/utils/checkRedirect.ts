@@ -38,7 +38,7 @@ const checkRedirect = async (config: Config, getUserId: GetUserId, mockUserId?: 
   if (isMock) {
     // 使用 mock 的 userId
     if (mockUserId) {
-      Cookies.set('userId', window.mockUserId);
+      Cookies.set('userId', mockUserId);
     }
     return ;
   }
