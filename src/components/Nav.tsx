@@ -13,10 +13,10 @@ const Nav: FC = () => {
         <Link to="/actions">操作</Link>
       </Menu.Item>
       <Menu.Item key="externalUser" icon={<UserOutlined />}>
-        <Link to="/external-user">外部联系人</Link>
+        <Link to="/external-user">人</Link>
       </Menu.Item>
       <Menu.Item key="externalChat" icon={<UsergroupAddOutlined />}>
-        <Link to="/external-chat">外部联系群</Link>
+        <Link to="/external-chat">群</Link>
       </Menu.Item>
     </Menu>
   )
