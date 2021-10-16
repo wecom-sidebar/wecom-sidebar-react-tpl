@@ -1,3 +1,4 @@
+export const mockUserId = window.mockUserId || 'YanHaixiang';
 
 // 可在这里自由 mock wx.invoke 的内容
 export const invokeResMock: Record<string, any> = window.invokeResMock || {

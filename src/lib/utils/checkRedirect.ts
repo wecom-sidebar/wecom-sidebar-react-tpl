@@ -34,8 +34,14 @@ const generateOAuthUrl = (config: Config) => {
 /**
  * 判断当前网页是否需要重定向
  */
-const checkRedirect = async (config: Config, getUserId: GetUserId) => {
-  if (isMock) return
+const checkRedirect = async (config: Config, getUserId: GetUserId, mockUserId?: string) => {
+  if (isMock) {
+    // 使用 mock 的 userId
+    if (mockUserId) {
+      Cookies.set('userId', window.mockUserId);
+    }
+    return ;
+  }
 
   const userId = Cookies.get('userId')
 

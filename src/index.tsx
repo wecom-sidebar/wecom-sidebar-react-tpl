@@ -6,7 +6,7 @@ import zhCN from 'antd/lib/locale/zh_CN';
 import App from './App'
 import {fetchUserId, fetchSignatures} from './api'
 import config from './_config'
-import {invokeResMock, wxResMock} from "./mock";
+import {invokeResMock, mockUserId, wxResMock} from "./mock";
 import {checkRedirect, createJsSdk, initSdk} from "./lib";
 
 import 'antd/dist/antd.css';
@@ -19,6 +19,6 @@ const AppWrapper = (
   </ConfigProvider>
 )
 
-checkRedirect(config, fetchUserId)
+checkRedirect(config, fetchUserId, mockUserId)
   .then(() => initSdk(config, fetchSignatures))
   .then(() => ReactDOM.render(AppWrapper, document.getElementById('root')))
