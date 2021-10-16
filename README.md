@@ -52,6 +52,9 @@ export default config
 **如果你不想将 Mock 写死在项目上，你也可以在 Whistle 配置上添加 JS 文件，在全局注入对应的 Mock 值和回调函数。**
 
 ```js
+// Mock 当前用户 Id
+window.mockUserId = 'xxx'
+
 // 可在这里自由 mock wx.invoke 的内容
 window.invokeResMock = {
   'getCurExternalContact': {
