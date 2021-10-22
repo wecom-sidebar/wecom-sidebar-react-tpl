@@ -49,7 +49,7 @@ export default config
 
 **在浏览器模式下，会 Mock `jsSdk`，默认回调为空函数，并打上对应日志。你也可以在 `src/mock.ts` 下可以添加对 `wx.fn` 和 `wx.invoke` 这些函数的 Mock 值以及 Mock 函数。**
 
-**如果你不想将 Mock 写死在项目上，你也可以在 Whistle 配置上添加 JS 文件，在全局注入对应的 Mock 值和回调函数。**
+**如果你不想将 Mock 写死在项目上，你也可以利用 [Whistle 预先注入全局 JS](https://wproxy.org/whistle/rules/jsPrepend.html)，以此在全局注入对应的 Mock 值和回调函数。**
 
 ```js
 // Mock 当前用户 Id
