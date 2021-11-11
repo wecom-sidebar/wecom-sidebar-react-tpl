@@ -51,6 +51,21 @@ export default config
 
 **如果你不想将 Mock 写死在项目上，你也可以利用 [Whistle 预先注入全局 JS](https://wproxy.org/whistle/rules/jsPrepend.html)，以此在全局注入对应的 Mock 值和回调函数。**
 
+Whistle 的 `Rules` 可以写成：
+
+```
+# 代理前端（侧边栏页面代理到本地的 3000 端口），这里要改为你自己配置H5的地址就好
+//service-xxx-yyy.gz.apigw.tencentcs.com http://127.0.0.1:3000
+
+# 代理后端（后端模板的 baseURL 该模板写死为 backend.com，这里代理到本地的 5000 端口）
+//backend.com http://127.0.0.1:5000
+
+# 全局注入 mock.js
+//service-xxx-yyy.gz.apigw.tencentcs.com  jsPrepend://{mock.js}
+```
+
+然后在 Whistle 页面的 `Values` 中会自动生成一个 `mock.js`，再在里面添加如下代码：
+
 ```js
 // Mock 当前用户 Id
 window.mockUserId = 'xxx'
