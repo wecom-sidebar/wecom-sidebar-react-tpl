@@ -64,7 +64,7 @@ Whistle 的 `Rules` 可以写成：
 //service-xxx-yyy.gz.apigw.tencentcs.com  jsPrepend://{mock.js}
 ```
 
-然后在 Whistle 页面的 `Values` 中会自动生成一个 `mock.js`，再在里面添加如下代码：
+然后在 Whistle 页面的 `Values` (输入 http://127.0.0.1:8899/#values 可见) 中会自动生成一个 `mock.js`，再在里面添加如下代码：
 
 ```js
 // Mock 当前用户 Id
