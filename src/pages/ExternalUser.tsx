@@ -2,7 +2,7 @@ import * as React from 'react'
 import {useEffect, useState} from 'react'
 import {fetchExternalUser} from '../api'
 import {jsSdk} from "../index";
-import {message, Spin} from "antd";
+import {Button, message, Spin} from "antd";
 
 // 性别Map
 const genderMap = ['未定义', '男', '女']
@@ -49,9 +49,9 @@ const ExternalUser: React.FC = () => {
             <p>ID: {externalUser.external_userid}</p>
             <p>姓名: {externalUser.name}@{externalUser.corp_name}</p>
             <p>姓别: {genderMap[externalUser.gender]}</p>
-            <button onClick={openUserProfile}>
+            <Button type="primary" size="small" onClick={openUserProfile}>
               查看详情
-            </button>
+            </Button>
           </div>
         ) : <p>找不到外部联系人</p>}
       </div>

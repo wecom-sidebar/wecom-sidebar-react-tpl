@@ -23,10 +23,10 @@ const Actions: React.FC = () => {
     <div>
       <h2>功能</h2>
 
-      <TextArea style={{width: '100%'}} value={msg} onChange={e => setMsg(e.target.value)}/>
+      <TextArea style={{width: '100%', marginBottom: 8}} value={msg} onChange={e => setMsg(e.target.value)}/>
 
-      <Button type="primary" onClick={sendMsg}>
-        sendChatMessage
+      <Button block type="primary" onClick={sendMsg}>
+        发送
       </Button>
     </div>
   )
