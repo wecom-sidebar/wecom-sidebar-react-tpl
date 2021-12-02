@@ -25,7 +25,8 @@ const Home: FC = () => {
   return (
     <Spin spinning={loading}>
       <div>
-        <h1>欢迎回来，{user ? user.name : ''}</h1>
+        <h1>React App</h1>
+        <h2>欢迎回来，{user ? user.name : ''}</h2>
       </div>
     </Spin>
   )
