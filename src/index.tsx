@@ -20,5 +20,5 @@ const AppWrapper = (
 )
 
 checkRedirect(config, fetchUserId, mockUserId)
-  .then(() => initSdk(config, fetchSignatures))
+  .then(() => initSdk(jsSdk, config, fetchSignatures))
   .then(() => ReactDOM.render(AppWrapper, document.getElementById('root')))

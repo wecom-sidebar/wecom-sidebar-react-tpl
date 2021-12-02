@@ -1,5 +1,5 @@
 import apis from '../jsSdk/apis';
-import {jsSdk} from "../../index";
+import {JsSDK} from "../jsSdk";
 
 export interface Config {
   corpId: string;
@@ -13,7 +13,7 @@ export type GetSignatures = () => Promise<TicketRes>
  * config: 基础信息配置
  * getSignatures: 获取签名函数
  */
-const initSdk = async (config: Config, getSignatures: GetSignatures) => {
+const initSdk = async (jsSdk: JsSDK, config: Config, getSignatures: GetSignatures) => {
   const { corpId, agentId } = config;
 
   // 获取 ticket
