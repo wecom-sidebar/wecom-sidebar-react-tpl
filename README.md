@@ -35,7 +35,7 @@ export default config
 
 然后在 whistle 中添加以下的代理配置，将后端路由传向本地
 
-```
+```dotenv
 # 代理前端（侧边栏页面代理到本地的 3000 端口），这里要改为你自己配置H5的地址就好
 //service-xxx-yyy.gz.apigw.tencentcs.com http://127.0.0.1:3000
 
@@ -53,7 +53,7 @@ export default config
 
 Whistle 的 `Rules` 可以写成：
 
-```
+```dotenv
 # 代理前端（侧边栏页面代理到本地的 3000 端口），这里要改为你自己配置H5的地址就好
 //service-xxx-yyy.gz.apigw.tencentcs.com http://127.0.0.1:3000
 
