@@ -1,6 +1,6 @@
 # wecom-sidebar-react-tpl
 
-企业微信侧边栏前端开发模板
+企业微信侧边栏 react 开发模板
 
 ## 功能
 
