@@ -12,15 +12,19 @@ const ExternalUser: React.FC = () => {
   const [externalUser, setExternalUser] = useState<ExternalUserResponse['external_contact'] | void>()
 
   const getExternalUserInfo = async () => {
-    const res = await jsSdk.invoke<{ userId?: string }>('getCurExternalContact', {})
+    try {
+      const res = await jsSdk.invoke<{ userId?: string }>('getCurExternalContact', {})
 
-    if (!res || !res.userId) return
+      if (!res || !res.userId) return
 
-    console.log('外部联系人 ID', res.userId);
+      console.log('外部联系人 ID', res.userId);
 
-    const userInfo = await fetchExternalUser(res.userId).catch(e => console.error(e))
+      const userInfo = await fetchExternalUser(res.userId).catch(e => console.error(e))
 
-    setExternalUser(userInfo)
+      setExternalUser(userInfo)
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   useEffect(() => {
