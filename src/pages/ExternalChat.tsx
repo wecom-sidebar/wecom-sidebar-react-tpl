@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {useEffect, useState} from 'react'
 import {fetchExternalChat} from '../api'
-import {jsSdk} from "../index";
 import {Spin} from "antd";
+import {invoke} from "wecom-sidebar-jssdk";
 
 const ExternalChat: React.FC = () => {
   const [loading, setLoading] = useState<boolean>()
@@ -10,7 +10,7 @@ const ExternalChat: React.FC = () => {
 
   const getExternalChatInfo = async () => {
     try {
-      const res = await jsSdk.invoke<{chatId?: string}>('getCurExternalChat', {})
+      const res = await invoke('getCurExternalChat', {})
 
       if (!res || !res.chatId) return
 
@@ -30,7 +30,7 @@ const ExternalChat: React.FC = () => {
   }, [])
 
   const openUserProfile = (userId: string, type: 1 | 2) => {
-    return jsSdk.invoke('openUserProfile', {
+    return invoke('openUserProfile', {
       userid: userId,
       type,
     })

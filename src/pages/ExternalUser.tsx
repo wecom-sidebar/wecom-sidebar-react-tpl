@@ -1,8 +1,8 @@
 import * as React from 'react'
 import {useEffect, useState} from 'react'
 import {fetchExternalUser} from '../api'
-import {jsSdk} from "../index";
 import {Button, message, Spin} from "antd";
+import {invoke} from "wecom-sidebar-jssdk";
 
 // 性别Map
 const genderMap = ['未定义', '男', '女']
@@ -13,7 +13,7 @@ const ExternalUser: React.FC = () => {
 
   const getExternalUserInfo = async () => {
     try {
-      const res = await jsSdk.invoke<{ userId?: string }>('getCurExternalContact', {})
+      const res = await invoke('getCurExternalContact', {})
 
       if (!res || !res.userId) return
 
@@ -37,7 +37,7 @@ const ExternalUser: React.FC = () => {
       return message.warn('找不到外部联系人');
     }
 
-    return jsSdk.invoke('openUserProfile', {
+    return invoke('openUserProfile', {
       userid: externalUser.external_userid,
       type: externalUser.type
     })
