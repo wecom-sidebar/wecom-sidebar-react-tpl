@@ -5,7 +5,7 @@ import {ConfigProvider} from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import App from './App'
 import {fetchSignatures, fetchUserId} from './api'
-import config from './_config'
+import config from './config'
 import {mockUserId} from "./mock";
 import {checkRedirect, initSdk} from "wecom-sidebar-jssdk";
 

@@ -13,19 +13,15 @@
 
 ## 基础配置
 
-启动项目需要用到 `agentId` 和 `corpId`，需要创建 `src/_config.ts`（目前已隐藏），示例
+启动项目需要用到 `agentId` 和 `corpId`，需要创建 `.env`（目前已隐藏），示例
 
-```ts
-// src/_config.ts
+```env
+# .env
 
-const config = {
-  // 在 https://work.weixin.qq.com/wework_admin/frame#profile 这里可以找到
-  corpId: '你的企业ID',
-  // 在 https://work.weixin.qq.com/wework_admin/frame#apps 里的自建应用里可以找到
-  agentId: '自建应用的AgentId'
-}
-
-export default config
+# 在 https://work.weixin.qq.com/wework_admin/frame#profile 这里可以找到
+REACT_APP_CORP_ID=ww15111a848414e43f
+# 在 https://work.weixin.qq.com/wework_admin/frame#apps 里的自建应用里可以找到
+REACT_APP_AGENT_ID=1000002
 ```
 
 ## 代理配置
