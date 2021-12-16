@@ -4,9 +4,7 @@
 
 ## 功能
 
-- [x] 一份 [企业侧边栏客户端](https://open.work.weixin.qq.com/api/doc/90001/90144/90545) 模板
-- [x] `wx.agentConfig`, `wx.config`, `wx.invoke` 函数封装
-- [x] 侧边栏重定向获取用户身份 `checkRedirect`，以及 JsSDK 的初始化步骤 `initSdk`
+- [X] 使用 ![wecom-sidebar-jssdk](https://github.com/wecom-sidebar/wecom-sidebar-jssdk) 调用 SDK API 以及处理重要初始化逻辑
 - [x] Mock 侧边栏 JsSdk，**使其可以在浏览器上直接调试！**
 - [X] TS 支持
 - [x] React Router 的示例
@@ -43,47 +41,33 @@ REACT_APP_AGENT_ID=1000002
 
 **此功能可以使得你在浏览器上直接调试侧边栏应用！**
 
-**在浏览器模式下，会 Mock `jsSdk`，默认回调为空函数，并打上对应日志。你也可以在 `src/mock.ts` 下可以添加对 `wx.fn` 和 `wx.invoke` 这些函数的 Mock 值以及 Mock 函数。**
+```ts
+import {setInvokeResMock, setWxResMock, setMockUserId} from "wecom-sidebar-jssdk";
 
-**如果你不想将 Mock 写死在项目上，你也可以利用 [Whistle 预先注入全局 JS](https://wproxy.org/whistle/rules/jsPrepend.html)，以此在全局注入对应的 Mock 值和回调函数。**
-
-Whistle 的 `Rules` 可以写成：
-
-```dotenv
-# 代理前端（侧边栏页面代理到本地的 3000 端口），这里要改为你自己配置H5的地址就好
-//service-xxx-yyy.gz.apigw.tencentcs.com http://127.0.0.1:3000
-
-# 代理后端（后端模板的 baseURL 该模板写死为 backend.com，这里代理到本地的 5000 端口）
-//backend.com http://127.0.0.1:5000
-
-# 全局注入 mock.js
-//service-xxx-yyy.gz.apigw.tencentcs.com  jsPrepend://{mock.js}
-```
-
-然后在 Whistle 页面的 `Values` (输入 http://127.0.0.1:8899/#values 可见) 中会自动生成一个 `mock.js`，再在里面添加如下代码：
-
-**注意，下面代码必须要加分号，因为下面代码直接插入到 Webpack 打包出来的代码，所以不加分号可能出错。**
-
-```js
 // Mock 当前用户 Id
-window.mockUserId = 'xxx';
+const mockUserId = window._mockUserId || "YanHaiXiang";
 
 // 可在这里自由 mock wx.invoke 的内容
-window.invokeResMock = {
-  'getCurExternalContact': {
-    userId: 'xxxxx'
+const invokeResMock: Record<string, any> = window._invokeResMock || {
+  getCurExternalContact: {
+    userId: "wmuUG7CQAAOrCCMkA8cqcCm1wJrJAD6A",
   },
 };
 
 // 可在这里自由 wx.fn 的内容
-window.wxResMock = {
-  'agentConfig': () => {
-    console.log('mock agent config')
+const wxResMock: Record<string, any> = window._wxResMock || {
+  agentConfig: () => {
+    console.log("mock agent config");
   },
 };
-```
 
-这里对应的 Mock 关系 Mapper 有 `wxResMock` 和 `invokeResMock` 分别对 `wx.fn` 和 `wx.invoke('api', callback')` 两种调用方式进行 Mock。
+// 初始化 mockSdk
+export const mockSdk = () => {
+  setInvokeResMock(invokeResMock);
+  setWxResMock(wxResMock);
+  setMockUserId(mockUserId)
+}
+```
 
 ## 启动
 
