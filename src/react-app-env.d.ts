@@ -4,7 +4,7 @@ import {JsSDK} from "./lib/jsSdk";
 declare global {
   interface Window {
     // 外部控制是否为 mock
-    isMock?: boolean;
+    _isMock?: boolean;
     // mock userId
     _mockUserId: string,
     // wx.invoke 里的 Mock 关系表，apiName -> result
